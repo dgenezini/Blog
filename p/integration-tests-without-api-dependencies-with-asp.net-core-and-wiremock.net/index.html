@@ -1,0 +1,351 @@
+<!doctype html><html lang=en-us dir=ltr><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="Mockings APIs with WireMock.Net"><title>Integration tests without API dependencies with ASP.NET Core and WireMock.Net</title><link rel=canonical href=https://blog.genezini.com/p/integration-tests-without-api-dependencies-with-asp.net-core-and-wiremock.net/><link rel=stylesheet href=/scss/style.min.ac77dcf8b111b51da39a92990f431923f210f3876d85798a2125667f96dc33a4.css><meta property="og:title" content="Integration tests without API dependencies with ASP.NET Core and WireMock.Net"><meta property="og:description" content="Mockings APIs with WireMock.Net"><meta property="og:url" content="https://blog.genezini.com/p/integration-tests-without-api-dependencies-with-asp.net-core-and-wiremock.net/"><meta property="og:site_name" content="Daniel Genezini"><meta property="og:type" content="article"><meta property="article:section" content="Post"><meta property="article:tag" content="Tests"><meta property="article:tag" content="Integration Tests"><meta property="article:tag" content="WireMock.Net"><meta property="article:tag" content="ASP.NET Core"><meta property="article:tag" content=".NET"><meta property="article:tag" content="C#"><meta property="article:published_time" content="2022-09-25T08:00:00-03:00"><meta property="article:modified_time" content="2022-09-25T08:00:00-03:00"><meta property="og:image" content="https://blog.genezini.com/p/integration-tests-without-api-dependencies-with-asp.net-core-and-wiremock.net/cover.jpg"><meta name=twitter:title content="Integration tests without API dependencies with ASP.NET Core and WireMock.Net"><meta name=twitter:description content="Mockings APIs with WireMock.Net"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://blog.genezini.com/p/integration-tests-without-api-dependencies-with-asp.net-core-and-wiremock.net/cover.jpg"><script async src="https://www.googletagmanager.com/gtag/js?id=G-029SLZEC4C"></script>
+<script>var doNotTrack=!1;if(!doNotTrack){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","G-029SLZEC4C",{anonymize_ip:!1})}</script></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label="Toggle Menu">
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><figure class=site-avatar><a href=/><img src=/img/avatar_hu793066471163999a4414bfb3be66f111_30130_300x0_resize_q75_box.jpg width=300 height=300 class=site-logo loading=lazy alt=Avatar></a></figure><div class=site-meta><h1 class=site-name><a href=/>Daniel Genezini</a></h1><h2 class=site-description></h2></div></header><ol class=social-menu><li><a href=https://github.com/dgenezini/ target=_blank title=GitHub><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6.0 00-1.3-3.2 4.2 4.2.0 00-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3.0 00-6.2.0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2.0 00-.1 3.2A4.6 4.6.0 004 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></a></li><li><a href=https://www.linkedin.com/in/danielgenezini/ target=_blank title=Linkedin><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-linkedin" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><rect x="4" y="4" width="16" height="16" rx="2"/><line x1="8" y1="11" x2="8" y2="16"/><line x1="8" y1="8" x2="8" y2="8.01"/><line x1="12" y1="16" x2="12" y2="11"/><path d="M16 16v-3a2 2 0 00-4 0"/></svg></a></li></ol><ol class=menu id=main-menu><li><a href=/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="5 12 3 12 12 3 21 12 19 12"/><path d="M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/><path d="M9 21v-6a2 2 0 012-2h2a2 2 0 012 2v6"/></svg><span>Home</span></a></li><li><a href=/archives/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><rect x="3" y="4" width="18" height="4" rx="2"/><path d="M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/><line x1="10" y1="12" x2="14" y2="12"/></svg><span>Archives</span></a></li><li><a href=/search/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg><span>Search</span></a></li><div class=menu-bottom-section><li id=i18n-switch><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-language" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 5h7"/><path d="M9 3v2c0 4.418-2.239 8-5 8"/><path d="M5 9c-.003 2.144 2.952 3.908 6.7 4"/><path d="M12 20l4-9 4 9"/><path d="M19.1 18h-6.2"/></svg><select name=language onchange="window.location.href=this.selectedOptions[0].value"><option value=https://blog.genezini.com/ selected>🇬🇧 English</option><option value=https://blog.genezini.com/pt/>🇧🇷 Português</option></select></li><li id=dark-mode-toggle><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg><span>Dark Mode</span></li></div></ol></aside><main class="main full-width"><article class="has-image main-article"><header class=article-header><div class=article-image><a href=/p/integration-tests-without-api-dependencies-with-asp.net-core-and-wiremock.net/><img src=/p/integration-tests-without-api-dependencies-with-asp.net-core-and-wiremock.net/cover.jpg width=1200 height=600 loading=lazy alt="Featured image of post Integration tests without API dependencies with ASP.NET Core and WireMock.Net"></a></div><div class=article-details><header class=article-category><a href=/categories/tests/>Tests</a>
+<a href=/categories/.net/>.NET</a>
+<a href=/categories/asp.net-core/>ASP.NET Core</a>
+<a href=/categories/c-sharp/>C#</a></header><div class=article-title-wrapper><h2 class=article-title><a href=/p/integration-tests-without-api-dependencies-with-asp.net-core-and-wiremock.net/>Integration tests without API dependencies with ASP.NET Core and WireMock.Net</a></h2><h3 class=article-subtitle>Mockings APIs with WireMock.Net</h3></div><footer class=article-time><div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg><time class=article-time--published>25 Sep 2022</time></div><div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg><time class=article-time--reading>6 minute read</time></div></footer><footer class=article-translations><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-language" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 5h7"/><path d="M9 3v2c0 4.418-2.239 8-5 8"/><path d="M5 9c-.003 2.144 2.952 3.908 6.7 4"/><path d="M12 20l4-9 4 9"/><path d="M19.1 18h-6.2"/></svg><div><a href=https://blog.genezini.com/pt/p/testes-de-integracao-com-aspnet-core-e-wiremocknet/ class=link>🇧🇷 Português</a></div></footer></div></header><section class=article-content><h1 id=introduction>Introduction</h1><p>Although there are many definitions about the scope of an integration test, Martin Fowler defines Narrow integration tests, where the integration with other systems are tested using mocks, and Broad integration tests, where they communicate using real APIs.</p><p>In this post, I&rsquo;ll explain how to create mocks for HTTP APIs in narrow integration tests using the <a class=link href=https://github.com/WireMock-Net/WireMock.Net target=_blank rel=noopener>WireMock.Net</a> library.</p><h1 id=what-should-we-mock>What should we mock?</h1><p>Vladimir Khorikov has a concept of managed dependencies and unmanaged dependencies, which I consider complementary to Martin Fowler&rsquo;s, to choose what should be to mocked.</p><p>Managed dependencies are external systems controlled by us and accessed only by our application (for example, a database). On the other side, unmanaged dependencies are external systems not controlled by us or also accessed by other applications (like a third party API or a message broker).</p><p>Vladimir says that we should test our system against managed dependencies, while mocking unmanaged dependencies. I believe this definition is more like a guideline than a rule. For example, in a scenario where our application posts in a message broker for other system to read, that is, the message broker is an unmanaged dependency, we could test the integration with the message broker to validate that the message is being written in the right format (according to contract). This can have value if we want to test if updates to the library used to communicate with the message broker didn&rsquo;t introduce breaking changes in the message.</p><h1 id=why-use-mocks>Why use mocks?</h1><p>The reason we use integration tests is to test our components (or classes), which are tested independently in unit tests, working in communication with each other. When we interact with an API, we follow a protocol and trust a contract of communication, that is, that the API will accept parameters X as input and will return an response Y.</p><p>That way, the inner works of that external API is not in the scope of our integration tests.</p><p>This doesn&rsquo;t remove the requirement of functional tests; it only reduces the amount of those tests, which are more expensive to execute.</p><p>Reducing the integration tests only to our application, we have some benefits:</p><ul><li>Speed of the tests, because we remove the network latency;</li><li>No need of data in external systems to execute the tests;</li><li>Reduced brittleness of the tests, that could break in case of the external API instability or external data that changed;</li><li>More trust in the test results.</li></ul><h1 id=using-wiremockspanspannet>Using WireMock.Net</h1><p>In this example, I&rsquo;ve built an API that consumes the PokéAPI service to look for a Pokémon data and return it to the client.</p><h2 id=controller>Controller</h2><p>The controller is simple and use the <a class=link href=https://github.com/reactiveui/refit target=_blank rel=noopener>Refit</a> library to abstract the PokéAPI call and then, returns the data.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-csharp data-lang=csharp><span class=line><span class=cl><span class=k>using</span> <span class=nn>Microsoft.AspNetCore.Mvc</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=k>using</span> <span class=nn>Refit</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>namespace</span> <span class=nn>PokemonInfoAPI.Controllers</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl><span class=na>    [ApiController]</span>
+</span></span><span class=line><span class=cl><span class=na>    [Route(&#34;[controller]</span><span class=s>&#34;)]
+</span></span></span><span class=line><span class=cl><span class=s></span>    <span class=k>public</span> <span class=k>class</span> <span class=nc>PokemonInfoController</span> <span class=p>:</span> <span class=n>ControllerBase</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>private</span> <span class=k>readonly</span> <span class=n>IConfiguration</span> <span class=n>_configuration</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=k>public</span> <span class=n>PokemonInfoController</span><span class=p>(</span><span class=n>IConfiguration</span> <span class=n>configuration</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>_configuration</span> <span class=p>=</span> <span class=n>configuration</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=na>
+</span></span></span><span class=line><span class=cl><span class=na>        [HttpGet(&#34;{pokemonName}&#34;)]</span>
+</span></span><span class=line><span class=cl>        <span class=k>public</span> <span class=k>async</span> <span class=n>Task</span><span class=p>&lt;</span><span class=n>ActionResult</span><span class=p>&lt;</span><span class=n>PokemonInfo</span><span class=p>&gt;&gt;</span> <span class=n>GetAsync</span><span class=p>(</span><span class=kt>string</span> <span class=n>pokemonName</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=k>try</span>
+</span></span><span class=line><span class=cl>            <span class=p>{</span>
+</span></span><span class=line><span class=cl>                <span class=kt>var</span> <span class=n>pokeApi</span> <span class=p>=</span> <span class=n>RestService</span><span class=p>.</span><span class=n>For</span><span class=p>&lt;</span><span class=n>IPokeApi</span><span class=p>&gt;(</span><span class=n>_configuration</span><span class=p>[</span><span class=s>&#34;PokeApiBaseUrl&#34;</span><span class=p>]);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>                <span class=k>return</span> <span class=n>Ok</span><span class=p>(</span><span class=k>await</span> <span class=n>pokeApi</span><span class=p>.</span><span class=n>GetPokemonInfo</span><span class=p>(</span><span class=n>pokemonName</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>            <span class=p>}</span>
+</span></span><span class=line><span class=cl>            <span class=k>catch</span> <span class=p>(</span><span class=n>ApiException</span> <span class=n>ex</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>            <span class=p>{</span>
+</span></span><span class=line><span class=cl>                <span class=k>if</span> <span class=p>(</span><span class=n>ex</span><span class=p>.</span><span class=n>StatusCode</span> <span class=p>==</span> <span class=n>System</span><span class=p>.</span><span class=n>Net</span><span class=p>.</span><span class=n>HttpStatusCode</span><span class=p>.</span><span class=n>NotFound</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>                <span class=p>{</span>
+</span></span><span class=line><span class=cl>                    <span class=k>return</span> <span class=n>NotFound</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>                <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>                <span class=k>return</span> <span class=n>StatusCode</span><span class=p>(</span><span class=m>500</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>            <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=default-integration-test>Default integration test</h2><p>We start with a default integration test, using ASP.NET Core&rsquo;s WebApplicationFactory class.
+The test creates an instance of our application e makes a request to the <code>/pokemoninfo</code> endpoint with the parameter <code>charmander</code>. Out application calls the PokéAPI.</p><blockquote><p>⚠️ <strong>If you&rsquo;re using the <code>Startup.cs</code> class</strong> in your application, instanciate <code>WebApplicationFactory&lt;Startup></code> instead of <code>WebApplicationFactory&lt;Program></code>.</p></blockquote><blockquote><p>⚠️ <strong>If you&rsquo;re not using the <code>Startup.cs</code> class, it&rsquo;s not possible to use top-level statements</strong> in your application to use the <code>WebApplicationFactory</code> in your tests.</p></blockquote><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-csharp data-lang=csharp><span class=line><span class=cl><span class=k>using</span> <span class=nn>FluentAssertions</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=k>using</span> <span class=nn>Microsoft.AspNetCore.Mvc.Testing</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=k>using</span> <span class=nn>System.Net</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=k>using</span> <span class=nn>System.Text.Json</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>namespace</span> <span class=nn>PokemonInfoAPI.IntegrationTests</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>public</span> <span class=k>class</span> <span class=nc>PokemonInfoTests</span><span class=p>:</span> <span class=n>IClassFixture</span><span class=p>&lt;</span><span class=n>WebApplicationFactory</span><span class=p>&lt;</span><span class=n>Program</span><span class=p>&gt;&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>private</span> <span class=k>readonly</span> <span class=n>WebApplicationFactory</span><span class=p>&lt;</span><span class=n>Program</span><span class=p>&gt;</span> <span class=n>_factory</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=k>public</span> <span class=n>PokemonInfoTests</span><span class=p>(</span><span class=n>WebApplicationFactory</span><span class=p>&lt;</span><span class=n>Program</span><span class=p>&gt;</span> <span class=n>factory</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>_factory</span> <span class=p>=</span> <span class=n>factory</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=na>
+</span></span></span><span class=line><span class=cl><span class=na>        [Fact]</span>
+</span></span><span class=line><span class=cl>        <span class=k>public</span> <span class=k>async</span> <span class=n>Task</span> <span class=n>Get_Existing_Pokemon_Returns_200</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=c1>//Arrange</span>
+</span></span><span class=line><span class=cl>            <span class=kt>var</span> <span class=n>HttpClient</span> <span class=p>=</span> <span class=n>Factory</span><span class=p>.</span><span class=n>CreateClient</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>            <span class=c1>//Act</span>
+</span></span><span class=line><span class=cl>            <span class=kt>var</span> <span class=n>HttpResponse</span> <span class=p>=</span> <span class=k>await</span> <span class=n>HttpClient</span><span class=p>.</span><span class=n>GetAsync</span><span class=p>(</span><span class=s>&#34;/pokemoninfo/charmander&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>            <span class=c1>//Assert</span>
+</span></span><span class=line><span class=cl>            <span class=n>HttpResponse</span><span class=p>.</span><span class=n>StatusCode</span><span class=p>.</span><span class=n>Should</span><span class=p>().</span><span class=n>Be</span><span class=p>(</span><span class=n>HttpStatusCode</span><span class=p>.</span><span class=n>OK</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>            <span class=kt>var</span> <span class=n>ResponseJson</span> <span class=p>=</span> <span class=k>await</span> <span class=n>HttpResponse</span><span class=p>.</span><span class=n>Content</span><span class=p>.</span><span class=n>ReadAsStringAsync</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>            <span class=kt>var</span> <span class=n>PokemonInfo</span> <span class=p>=</span> <span class=n>JsonSerializer</span><span class=p>.</span><span class=n>Deserialize</span><span class=p>&lt;</span><span class=n>PokemonInfo</span><span class=p>&gt;(</span><span class=n>ResponseJson</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>            <span class=n>PokemonInfo</span><span class=p>.</span><span class=n>Should</span><span class=p>().</span><span class=n>BeEquivalentTo</span><span class=p>(</span><span class=n>ResponseObj</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=setting-up-a-mock-for-pokéapi>Setting up a mock for PokéAPI</h2><p>WireMock.Net is a library that let you create mocks for HTTP APIs. It creates a web server in the same process of our test and exposes an URL to be used by out application during the tests.</p><p>First, I install the <code>WireMock.Net</code> nuget package in my tests project no projeto de testes.</p><h3 id=using-visual-studio-package-manager>Using Visual Studio Package Manager</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>Install-Package WireMock.Net
+</span></span></code></pre></td></tr></table></div></div><p>Or</p><h3 id=using-net-cli>Using .NET CLI</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=nx>dotnet</span> <span class=nx>add</span> <span class=kn>package</span> <span class=nx>WireMock</span><span class=p>.</span><span class=nx>Net</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=starting-wiremockspanspannet-server>Starting WireMock.Net server</h2><p>To start the WireMock.Net server, I call the <code>Start</code> method of the <code>WireMockServer</code> class, and it returns an object with the server data.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-csharp data-lang=csharp><span class=line><span class=cl><span class=kt>var</span> <span class=n>WireMockSvr</span> <span class=p>=</span> <span class=n>WireMockServer</span><span class=p>.</span><span class=n>Start</span><span class=p>();</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=overriding-out-application-configurations>Overriding out application configurations</h2><p>With the server started, I override the <code>PokeApiBaseUrl</code> parameter, which holds the PokéAPI URL, in my application configurations using the method <code>WithWebHostBuilder</code> of the <code>WebApplicationFactory</code>:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-csharp data-lang=csharp><span class=line><span class=cl><span class=kt>var</span> <span class=n>HttpClient</span> <span class=p>=</span> <span class=n>_factory</span>
+</span></span><span class=line><span class=cl>    <span class=p>.</span><span class=n>WithWebHostBuilder</span><span class=p>(</span><span class=n>builder</span> <span class=p>=&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>builder</span><span class=p>.</span><span class=n>UseSetting</span><span class=p>(</span><span class=s>&#34;PokeApiBaseUrl&#34;</span><span class=p>,</span> <span class=n>WireMockSvr</span><span class=p>.</span><span class=n>Url</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>})</span>
+</span></span><span class=line><span class=cl>    <span class=p>.</span><span class=n>CreateClient</span><span class=p>();</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=mocking-the-pokemon-endpoint>Mocking the /pokemon endpoint</h2><p>Then, I create the mock for the <code>/pokemon</code> endpoint receiving the parameter value <code>charmander</code>.</p><p>In the example below, I&rsquo;m using the AutoFixture library to generate an object with random values, that will be returned by the mocked API.</p><blockquote><p>ℹ️ By using an object, I can compare the return of my application with this object, but it&rsquo;s also possible to configure the return based on an file with a JSON, with the <code>WithBodyFromFile</code> method.</p></blockquote><p>Also, I set the headers that will be returned and the HTTP status of the response.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-csharp data-lang=csharp><span class=line><span class=cl><span class=n>Fixture</span> <span class=n>fixture</span> <span class=p>=</span> <span class=k>new</span> <span class=n>Fixture</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kt>var</span> <span class=n>ResponseObj</span> <span class=p>=</span> <span class=n>fixture</span><span class=p>.</span><span class=n>Create</span><span class=p>&lt;</span><span class=n>PokemonInfo</span><span class=p>&gt;();</span>
+</span></span><span class=line><span class=cl><span class=kt>var</span> <span class=n>ResponseObjJson</span> <span class=p>=</span> <span class=n>JsonSerializer</span><span class=p>.</span><span class=n>Serialize</span><span class=p>(</span><span class=n>ResponseObj</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>WireMockSvr</span>
+</span></span><span class=line><span class=cl>    <span class=p>.</span><span class=n>Given</span><span class=p>(</span><span class=n>Request</span><span class=p>.</span><span class=n>Create</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>        <span class=p>.</span><span class=n>WithPath</span><span class=p>(</span><span class=s>&#34;/pokemon/charmander&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=p>.</span><span class=n>UsingGet</span><span class=p>())</span>
+</span></span><span class=line><span class=cl>    <span class=p>.</span><span class=n>RespondWith</span><span class=p>(</span><span class=n>Response</span><span class=p>.</span><span class=n>Create</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>        <span class=p>.</span><span class=n>WithBody</span><span class=p>(</span><span class=n>ResponseObjJson</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=p>.</span><span class=n>WithHeader</span><span class=p>(</span><span class=s>&#34;Content-Type&#34;</span><span class=p>,</span> <span class=s>&#34;application/json&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=p>.</span><span class=n>WithStatusCode</span><span class=p>(</span><span class=n>HttpStatusCode</span><span class=p>.</span><span class=n>OK</span><span class=p>));</span>
+</span></span></code></pre></td></tr></table></div></div><p>After that, my application inside the tests will be using the mocked version of the PokéAPI.</p><h1 id=complete-test-code>Complete test code</h1><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-csharp data-lang=csharp><span class=line><span class=cl><span class=na>[Fact]</span>
+</span></span><span class=line><span class=cl><span class=k>public</span> <span class=k>async</span> <span class=n>Task</span> <span class=n>Get_Existing_Pokemon_Returns_200</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>//Arrange</span>
+</span></span><span class=line><span class=cl>    <span class=kt>var</span> <span class=n>WireMockSvr</span> <span class=p>=</span> <span class=n>WireMockServer</span><span class=p>.</span><span class=n>Start</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=kt>var</span> <span class=n>HttpClient</span> <span class=p>=</span> <span class=n>_factory</span>
+</span></span><span class=line><span class=cl>        <span class=p>.</span><span class=n>WithWebHostBuilder</span><span class=p>(</span><span class=n>builder</span> <span class=p>=&gt;</span>
+</span></span><span class=line><span class=cl>            <span class=p>{</span>
+</span></span><span class=line><span class=cl>                <span class=n>builder</span><span class=p>.</span><span class=n>UseSetting</span><span class=p>(</span><span class=s>&#34;PokeApiBaseUrl&#34;</span><span class=p>,</span> <span class=n>WireMockSvr</span><span class=p>.</span><span class=n>Url</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>            <span class=p>})</span>
+</span></span><span class=line><span class=cl>        <span class=p>.</span><span class=n>CreateClient</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>Fixture</span> <span class=n>fixture</span> <span class=p>=</span> <span class=k>new</span> <span class=n>Fixture</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=kt>var</span> <span class=n>ResponseObj</span> <span class=p>=</span> <span class=n>fixture</span><span class=p>.</span><span class=n>Create</span><span class=p>&lt;</span><span class=n>PokemonInfo</span><span class=p>&gt;();</span>
+</span></span><span class=line><span class=cl>    <span class=kt>var</span> <span class=n>ResponseObjJson</span> <span class=p>=</span> <span class=n>JsonSerializer</span><span class=p>.</span><span class=n>Serialize</span><span class=p>(</span><span class=n>ResponseObj</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>WireMockSvr</span>
+</span></span><span class=line><span class=cl>        <span class=p>.</span><span class=n>Given</span><span class=p>(</span><span class=n>Request</span><span class=p>.</span><span class=n>Create</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>            <span class=p>.</span><span class=n>WithPath</span><span class=p>(</span><span class=s>&#34;/pokemon/charmander&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>            <span class=p>.</span><span class=n>UsingGet</span><span class=p>())</span>
+</span></span><span class=line><span class=cl>        <span class=p>.</span><span class=n>RespondWith</span><span class=p>(</span><span class=n>Response</span><span class=p>.</span><span class=n>Create</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>            <span class=p>.</span><span class=n>WithBody</span><span class=p>(</span><span class=n>ResponseObjJson</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>            <span class=p>.</span><span class=n>WithHeader</span><span class=p>(</span><span class=s>&#34;Content-Type&#34;</span><span class=p>,</span> <span class=s>&#34;application/json&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>            <span class=p>.</span><span class=n>WithStatusCode</span><span class=p>(</span><span class=n>HttpStatusCode</span><span class=p>.</span><span class=n>OK</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1>//Act</span>
+</span></span><span class=line><span class=cl>    <span class=kt>var</span> <span class=n>HttpResponse</span> <span class=p>=</span> <span class=k>await</span> <span class=n>HttpClient</span><span class=p>.</span><span class=n>GetAsync</span><span class=p>(</span><span class=s>&#34;/pokemoninfo/charmander&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1>//Assert</span>
+</span></span><span class=line><span class=cl>    <span class=n>HttpResponse</span><span class=p>.</span><span class=n>StatusCode</span><span class=p>.</span><span class=n>Should</span><span class=p>().</span><span class=n>Be</span><span class=p>(</span><span class=n>HttpStatusCode</span><span class=p>.</span><span class=n>OK</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=kt>var</span> <span class=n>ResponseJson</span> <span class=p>=</span> <span class=k>await</span> <span class=n>HttpResponse</span><span class=p>.</span><span class=n>Content</span><span class=p>.</span><span class=n>ReadAsStringAsync</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>    <span class=kt>var</span> <span class=n>PokemonInfo</span> <span class=p>=</span> <span class=n>JsonSerializer</span><span class=p>.</span><span class=n>Deserialize</span><span class=p>&lt;</span><span class=n>PokemonInfo</span><span class=p>&gt;(</span><span class=n>ResponseJson</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>PokemonInfo</span><span class=p>.</span><span class=n>Should</span><span class=p>().</span><span class=n>BeEquivalentTo</span><span class=p>(</span><span class=n>ResponseObj</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>WireMockSvr</span><span class=p>.</span><span class=n>Stop</span><span class=p>();</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h1 id=example-of-an-unsuccessfull-api-call-scenario>Example of an unsuccessfull API call scenario</h1><p>Based on the contract of the API, we know that it return the status 404 (Not Found) when the parameter is not a valid Pokémon name, so I created a mock that returns this status for the parameter value <code>woodywoodpecker</code> and assert that my application response is correct for this scenario.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-csharp data-lang=csharp><span class=line><span class=cl><span class=na>[Fact]</span>
+</span></span><span class=line><span class=cl><span class=k>public</span> <span class=k>async</span> <span class=n>Task</span> <span class=n>Get_NotExisting_Pokemon_Returns_404</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>//Arrange</span>
+</span></span><span class=line><span class=cl>    <span class=kt>var</span> <span class=n>WireMockSvr</span> <span class=p>=</span> <span class=n>WireMockServer</span><span class=p>.</span><span class=n>Start</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=kt>var</span> <span class=n>Factory</span> <span class=p>=</span> <span class=n>_factory</span><span class=p>.</span><span class=n>WithWebHostBuilder</span><span class=p>(</span><span class=n>builder</span> <span class=p>=&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>builder</span><span class=p>.</span><span class=n>UseSetting</span><span class=p>(</span><span class=s>&#34;PokeApiBaseUrl&#34;</span><span class=p>,</span> <span class=n>WireMockSvr</span><span class=p>.</span><span class=n>Url</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>});</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=kt>var</span> <span class=n>HttpClient</span> <span class=p>=</span> <span class=n>Factory</span><span class=p>.</span><span class=n>CreateClient</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>Fixture</span> <span class=n>fixture</span> <span class=p>=</span> <span class=k>new</span> <span class=n>Fixture</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>WireMockSvr</span>
+</span></span><span class=line><span class=cl>        <span class=p>.</span><span class=n>Given</span><span class=p>(</span><span class=n>Request</span><span class=p>.</span><span class=n>Create</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>            <span class=p>.</span><span class=n>WithPath</span><span class=p>(</span><span class=s>&#34;/pokemon/woodywoodpecker&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>            <span class=p>.</span><span class=n>UsingGet</span><span class=p>())</span>
+</span></span><span class=line><span class=cl>        <span class=p>.</span><span class=n>RespondWith</span><span class=p>(</span><span class=n>Response</span><span class=p>.</span><span class=n>Create</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>            <span class=p>.</span><span class=n>WithHeader</span><span class=p>(</span><span class=s>&#34;Content-Type&#34;</span><span class=p>,</span> <span class=s>&#34;application/json&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>            <span class=p>.</span><span class=n>WithStatusCode</span><span class=p>(</span><span class=n>HttpStatusCode</span><span class=p>.</span><span class=n>NotFound</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1>//Act</span>
+</span></span><span class=line><span class=cl>    <span class=kt>var</span> <span class=n>HttpResponse</span> <span class=p>=</span> <span class=k>await</span> <span class=n>HttpClient</span>
+</span></span><span class=line><span class=cl>        <span class=p>.</span><span class=n>GetAsync</span><span class=p>(</span><span class=s>&#34;/pokemoninfo/woodywoodpecker&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1>//Assert</span>
+</span></span><span class=line><span class=cl>    <span class=n>HttpResponse</span><span class=p>.</span><span class=n>StatusCode</span><span class=p>.</span><span class=n>Should</span><span class=p>().</span><span class=n>Be</span><span class=p>(</span><span class=n>HttpStatusCode</span><span class=p>.</span><span class=n>NotFound</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>WireMockSvr</span><span class=p>.</span><span class=n>Stop</span><span class=p>();</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h1 id=source-code>Source code</h1><p>| <a class=link href=https://github.com/dgenezini/PokemonInfoAPIWireMockTests target=_blank rel=noopener>https://github.com/dgenezini/PokemonInfoAPIWireMockTests</a></p><h1 id=references-and-links>References and links</h1><ul><li><a class=link href=https://martinfowler.com/bliki/IntegrationTest.html target=_blank rel=noopener>https://martinfowler.com/bliki/IntegrationTest.html</a></li><li><a class=link href=https://khorikov.org/posts/2021-11-29-unmanaged-dependencies-explained/ target=_blank rel=noopener>https://khorikov.org/posts/2021-11-29-unmanaged-dependencies-explained/</a></li><li><a class=link href=https://github.com/WireMock-Net/WireMock.Net target=_blank rel=noopener>https://github.com/WireMock-Net/WireMock.Net</a></li><li><a class=link href=https://github.com/reactiveui/refit target=_blank rel=noopener>https://github.com/reactiveui/refit</a></li><li><a class=link href=https://github.com/AutoFixture/AutoFixture target=_blank rel=noopener>https://github.com/AutoFixture/AutoFixture</a></li><li><a class=link href=https://github.com/fluentassertions/fluentassertions target=_blank rel=noopener>https://github.com/fluentassertions/fluentassertions</a></li></ul></section><footer class=article-footer><section class=article-tags><a href=/tags/tests/>Tests</a>
+<a href=/tags/integration-tests/>Integration Tests</a>
+<a href=/tags/wiremock.net/>WireMock.Net</a>
+<a href=/tags/asp.net-core/>ASP.NET Core</a>
+<a href=/tags/.net/>.NET</a>
+<a href=/tags/c-sharp/>C#</a></section><section class=article-copyright><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg><span>Licensed under CC BY-NC-SA 4.0</span></section></footer></article><div class=disqus-container><div id=disqus_thread></div><script type=application/javascript>window.disqus_config=function(){},function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById("disqus_thread").innerHTML="Disqus comments not available by default when the website is previewed locally.";return}var t=document,e=t.createElement("script");e.async=!0,e.src="//blog-t1jttokd4v.disqus.com/embed.js",e.setAttribute("data-timestamp",+new Date),(t.head||t.body).appendChild(e)}()</script><noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript><a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a></div><style>.disqus-container{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}</style><script>window.addEventListener("onColorSchemeChange",e=>{typeof DISQUS=="object"&&DISQUS.reset({reload:!0})})</script><footer class=site-footer><section class=copyright>&copy;
+2020 -
+2022 Daniel Genezini</section><section class=powerby>Built with <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a><br>Theme <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=3.13.0>Stack</a></b> designed by <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a></section></footer><div class=pswp tabindex=-1 role=dialog aria-hidden=true><div class=pswp__bg></div><div class=pswp__scroll-wrap><div class=pswp__container><div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden"><div class=pswp__top-bar><div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title=Share></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class=pswp__preloader><div class=pswp__preloader__icn><div class=pswp__preloader__cut><div class=pswp__preloader__donut></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class=pswp__share-tooltip></div></div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class=pswp__caption><div class=pswp__caption__center></div></div></div></div></div><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" crossorigin=anonymous defer></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css crossorigin=anonymous><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css crossorigin=anonymous></main><aside class="sidebar right-sidebar sticky"><section class="widget archives"><div class=widget-icon><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg></div><h2 class="widget-title section-title">Table of contents</h2><div class=widget--toc><nav id=TableOfContents><ol><li><a href=#introduction>Introduction</a></li><li><a href=#what-should-we-mock>What should we mock?</a></li><li><a href=#why-use-mocks>Why use mocks?</a></li><li><a href=#using-wiremockspanspannet>Using WireMock.Net</a><ol><li><a href=#controller>Controller</a></li><li><a href=#default-integration-test>Default integration test</a></li><li><a href=#setting-up-a-mock-for-pokéapi>Setting up a mock for PokéAPI</a></li><li><a href=#starting-wiremockspanspannet-server>Starting WireMock.Net server</a></li><li><a href=#overriding-out-application-configurations>Overriding out application configurations</a></li><li><a href=#mocking-the-pokemon-endpoint>Mocking the /pokemon endpoint</a></li></ol></li><li><a href=#complete-test-code>Complete test code</a></li><li><a href=#example-of-an-unsuccessfull-api-call-scenario>Example of an unsuccessfull API call scenario</a></li><li><a href=#source-code>Source code</a></li><li><a href=#references-and-links>References and links</a></li></ol></nav></div></section></aside></div><script src=https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z+KMkF24hUW8WePSA9HM=" crossorigin=anonymous></script><script type=text/javascript src=/ts/main.js defer></script>
+<script>(function(){const e=document.createElement("link");e.href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap",e.type="text/css",e.rel="stylesheet",document.head.appendChild(e)})()</script></body></html>
