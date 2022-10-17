@@ -1,5 +1,0 @@
-npipe:////./pipe/docker_engine
-
- 
-
-DOCKER_HOST
