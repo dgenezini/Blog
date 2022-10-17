@@ -10,7 +10,7 @@
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
-</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>MyProject/   &lt;-- My repo name
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>MyProject/   &lt;-- My repo name
 </span></span><span class=line><span class=cl>└── main          &lt;-- Branch name
 </span></span><span class=line><span class=cl>    ├── .git      &lt;-- Local repository
 </span></span><span class=line><span class=cl>    └── README.md
@@ -27,12 +27,12 @@
 </span><span class=lnt>5
 </span><span class=lnt>6
 </span><span class=lnt>7
-</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>MyProject/   &lt;-- My repo name
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>MyProject/   &lt;-- My repo name
 </span></span><span class=line><span class=cl>├── featureA      &lt;-- Branch name
 </span></span><span class=line><span class=cl>│   ├── .git      &lt;-- File pointing to ../main/.git
 </span></span><span class=line><span class=cl>│   └── README.md
 </span></span><span class=line><span class=cl>└── main          &lt;-- Branch name
-</span></span><span class=line><span class=cl>    ├── .git      &lt;-- Git local repository
+</span></span><span class=line><span class=cl>    ├── .git      &lt;-- Git <span class=nb>local</span> repository
 </span></span><span class=line><span class=cl>    └── README.md
 </span></span></code></pre></td></tr></table></div></div><blockquote><p>ℹ️ You can use the <code>git worktree add</code> and other git commands inside any working tree directory.</p></blockquote><blockquote><p>⚠️ <strong>If you are using windows</strong>, change the slash on the path from <code>../featureA</code> to <code>..\featureA</code>.</p></blockquote><h2 id=changing-to-a-working-tree>Changing to a working tree</h2><p>Just change the directory you are working on:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl><span class=nb>cd</span> ../featureA
