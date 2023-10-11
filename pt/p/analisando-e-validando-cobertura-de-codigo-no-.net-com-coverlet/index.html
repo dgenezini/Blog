@@ -31,9 +31,9 @@
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl><span class=k>namespace</span> <span class=nn>CodeCoverageSample.UseCases</span><span class=p>;</span>
 </span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl><span class=k>public</span> <span class=k>class</span> <span class=nc>IsEvenUseCase</span> <span class=p>:</span> <span class=n>IIsEvenUseCase</span>
+</span></span><span class=line><span class=cl><span class=kd>public</span> <span class=k>class</span> <span class=nc>IsEvenUseCase</span> <span class=p>:</span> <span class=n>IIsEvenUseCase</span>
 </span></span><span class=line><span class=cl><span class=p>{</span>
-</span></span><span class=line><span class=cl>    <span class=k>public</span> <span class=kt>string</span> <span class=n>IsEven</span><span class=p>(</span><span class=kt>int</span> <span class=n>number</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=kd>public</span> <span class=kt>string</span> <span class=n>IsEven</span><span class=p>(</span><span class=kt>int</span> <span class=n>number</span><span class=p>)</span>
 </span></span><span class=line><span class=cl>    <span class=p>{</span>
 </span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=p>(</span><span class=n>number</span> <span class=p>%</span> <span class=m>2</span> <span class=p>==</span> <span class=m>0</span><span class=p>)</span>
 </span></span><span class=line><span class=cl>        <span class=p>{</span>
@@ -68,10 +68,10 @@
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl><span class=k>namespace</span> <span class=nn>CodeCoverageSample.UnitTests</span><span class=p>;</span>
 </span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl><span class=k>public</span> <span class=k>class</span> <span class=nc>IsEvenUseCaseTests</span>
+</span></span><span class=line><span class=cl><span class=kd>public</span> <span class=k>class</span> <span class=nc>IsEvenUseCaseTests</span>
 </span></span><span class=line><span class=cl><span class=p>{</span>
 </span></span><span class=line><span class=cl><span class=na>    [Fact]</span>
-</span></span><span class=line><span class=cl>    <span class=k>public</span> <span class=k>void</span> <span class=n>NumeroPar_RetornaPar</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>    <span class=kd>public</span> <span class=k>void</span> <span class=n>NumeroPar_RetornaPar</span><span class=p>()</span>
 </span></span><span class=line><span class=cl>    <span class=p>{</span>
 </span></span><span class=line><span class=cl>        <span class=c1>//Arrange</span>
 </span></span><span class=line><span class=cl>        <span class=kt>var</span> <span class=n>isEvenUseCase</span> <span class=p>=</span> <span class=k>new</span> <span class=n>IsEvenUseCase</span><span class=p>();</span>
@@ -124,10 +124,10 @@
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl><span class=k>namespace</span> <span class=nn>CodeCoverageSample.UnitTests</span><span class=p>;</span>
 </span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl><span class=k>public</span> <span class=k>class</span> <span class=nc>IsEvenUseCaseTests</span>
+</span></span><span class=line><span class=cl><span class=kd>public</span> <span class=k>class</span> <span class=nc>IsEvenUseCaseTests</span>
 </span></span><span class=line><span class=cl><span class=p>{</span>
 </span></span><span class=line><span class=cl><span class=na>    [Fact]</span>
-</span></span><span class=line><span class=cl>    <span class=k>public</span> <span class=k>void</span> <span class=n>NumeroPar_RetornaPar</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>    <span class=kd>public</span> <span class=k>void</span> <span class=n>NumeroPar_RetornaPar</span><span class=p>()</span>
 </span></span><span class=line><span class=cl>    <span class=p>{</span>
 </span></span><span class=line><span class=cl>        <span class=c1>//Arrange</span>
 </span></span><span class=line><span class=cl>        <span class=kt>var</span> <span class=n>isEvenUseCase</span> <span class=p>=</span> <span class=k>new</span> <span class=n>IsEvenUseCase</span><span class=p>();</span>
@@ -140,7 +140,7 @@
 </span></span><span class=line><span class=cl>    <span class=p>}</span>
 </span></span><span class=line><span class=cl><span class=na>
 </span></span></span><span class=line><span class=cl><span class=na>    [Fact]</span>
-</span></span><span class=line><span class=cl>    <span class=k>public</span> <span class=k>void</span> <span class=n>NumeroImpar_RetornaImpar</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>    <span class=kd>public</span> <span class=k>void</span> <span class=n>NumeroImpar_RetornaImpar</span><span class=p>()</span>
 </span></span><span class=line><span class=cl>    <span class=p>{</span>
 </span></span><span class=line><span class=cl>        <span class=c1>//Arrange</span>
 </span></span><span class=line><span class=cl>        <span class=kt>var</span> <span class=n>isEvenUseCase</span> <span class=p>=</span> <span class=k>new</span> <span class=n>IsEvenUseCase</span><span class=p>();</span>
@@ -190,11 +190,11 @@
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl><span class=k>namespace</span> <span class=nn>CodeCoverageSample.UnitTests.IntegrationTests</span><span class=p>;</span>
 </span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl><span class=k>public</span> <span class=k>class</span> <span class=nc>IsEvenIntegrationTest</span> <span class=p>:</span> <span class=n>IClassFixture</span><span class=p>&lt;</span><span class=n>WebApplicationFactory</span><span class=p>&lt;</span><span class=n>Program</span><span class=p>&gt;&gt;</span>
+</span></span><span class=line><span class=cl><span class=kd>public</span> <span class=k>class</span> <span class=nc>IsEvenIntegrationTest</span> <span class=p>:</span> <span class=n>IClassFixture</span><span class=p>&lt;</span><span class=n>WebApplicationFactory</span><span class=p>&lt;</span><span class=n>Program</span><span class=p>&gt;&gt;</span>
 </span></span><span class=line><span class=cl><span class=p>{</span>
-</span></span><span class=line><span class=cl>    <span class=k>private</span> <span class=k>readonly</span> <span class=n>WebApplicationFactory</span><span class=p>&lt;</span><span class=n>Program</span><span class=p>&gt;</span> <span class=n>_factory</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=kd>private</span> <span class=k>readonly</span> <span class=n>WebApplicationFactory</span><span class=p>&lt;</span><span class=n>Program</span><span class=p>&gt;</span> <span class=n>_factory</span><span class=p>;</span>
 </span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl>    <span class=k>public</span> <span class=n>IsEvenIntegrationTest</span><span class=p>(</span><span class=n>WebApplicationFactory</span><span class=p>&lt;</span><span class=n>Program</span><span class=p>&gt;</span> <span class=n>factory</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=kd>public</span> <span class=n>IsEvenIntegrationTest</span><span class=p>(</span><span class=n>WebApplicationFactory</span><span class=p>&lt;</span><span class=n>Program</span><span class=p>&gt;</span> <span class=n>factory</span><span class=p>)</span>
 </span></span><span class=line><span class=cl>    <span class=p>{</span>
 </span></span><span class=line><span class=cl>        <span class=n>_factory</span> <span class=p>=</span> <span class=n>factory</span><span class=p>;</span>
 </span></span><span class=line><span class=cl>    <span class=p>}</span>
@@ -202,7 +202,7 @@
 </span></span></span><span class=line><span class=cl><span class=na>    [Theory]</span>
 </span></span><span class=line><span class=cl><span class=na>    [InlineData(2, &#34;Número é par&#34;)]</span>
 </span></span><span class=line><span class=cl><span class=na>    [InlineData(3, &#34;Número é ímpar&#34;)]</span>
-</span></span><span class=line><span class=cl>    <span class=k>public</span> <span class=k>async</span> <span class=n>Task</span> <span class=n>Numero_RetornaCorretoEOk</span><span class=p>(</span><span class=kt>int</span> <span class=n>number</span><span class=p>,</span> <span class=kt>string</span> <span class=n>expectedResult</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=kd>public</span> <span class=kd>async</span> <span class=n>Task</span> <span class=n>Numero_RetornaCorretoEOk</span><span class=p>(</span><span class=kt>int</span> <span class=n>number</span><span class=p>,</span> <span class=kt>string</span> <span class=n>expectedResult</span><span class=p>)</span>
 </span></span><span class=line><span class=cl>    <span class=p>{</span>
 </span></span><span class=line><span class=cl>        <span class=kt>var</span> <span class=n>HttpClient</span> <span class=p>=</span> <span class=n>_factory</span>
 </span></span><span class=line><span class=cl>            <span class=p>.</span><span class=n>CreateClient</span><span class=p>();</span>
@@ -232,7 +232,7 @@
 </span></span><span class=line><span class=cl><span class=k>namespace</span> <span class=nn>CodeCoverageSample</span><span class=p>;</span>
 </span></span><span class=line><span class=cl><span class=na>
 </span></span></span><span class=line><span class=cl><span class=na>[ExcludeFromCodeCoverage]</span>
-</span></span><span class=line><span class=cl><span class=k>public</span> <span class=k>class</span> <span class=nc>NaoMeTeste</span>
+</span></span><span class=line><span class=cl><span class=kd>public</span> <span class=k>class</span> <span class=nc>NaoMeTeste</span>
 </span></span><span class=line><span class=cl><span class=p>{</span>
 </span></span><span class=line><span class=cl>    <span class=p>...</span>
 </span></span><span class=line><span class=cl><span class=p>}</span>
@@ -245,10 +245,10 @@
 </span><span class=lnt>7
 </span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-csharp data-lang=csharp><span class=line><span class=cl><span class=k>namespace</span> <span class=nn>CodeCoverageSample</span><span class=p>;</span>
 </span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl><span class=k>public</span> <span class=k>class</span> <span class=nc>SemLogicaAqui</span>
+</span></span><span class=line><span class=cl><span class=kd>public</span> <span class=k>class</span> <span class=nc>SemLogicaAqui</span>
 </span></span><span class=line><span class=cl><span class=p>{</span>
-</span></span><span class=line><span class=cl>    <span class=k>public</span> <span class=kt>int</span> <span class=n>Id</span> <span class=p>{</span> <span class=k>get</span><span class=p>;</span> <span class=k>set</span><span class=p>;</span> <span class=p>}</span>
-</span></span><span class=line><span class=cl>    <span class=k>public</span> <span class=kt>int</span> <span class=n>Nome</span> <span class=p>{</span> <span class=k>get</span><span class=p>;</span> <span class=k>set</span><span class=p>;</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=kd>public</span> <span class=kt>int</span> <span class=n>Id</span> <span class=p>{</span> <span class=k>get</span><span class=p>;</span> <span class=k>set</span><span class=p>;</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=kd>public</span> <span class=kt>int</span> <span class=n>Nome</span> <span class=p>{</span> <span class=k>get</span><span class=p>;</span> <span class=k>set</span><span class=p>;</span> <span class=p>}</span>
 </span></span><span class=line><span class=cl><span class=p>}</span>
 </span></span></code></pre></td></tr></table></div></div><p>Basta passar o parâmetro <code>SkipAutoProps</code> como <code>true</code> quando executar o comando para avaliar a cobertura de código:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>dotnet <span class=nb>test</span> -p:CollectCoverage<span class=o>=</span><span class=nb>true</span> -p:CoverletOutputFormat<span class=o>=</span>opencover -p:CoverletOutput<span class=o>=</span>TestResults -p:SkipAutoProps<span class=o>=</span><span class=nb>true</span>
 </span></span></code></pre></div><blockquote><p>⚠️ <strong>Infelizmente, a extensão Run Coverage Report</strong> ainda não permite configurarmos os parâmetros do coverlet. Existe um pull request aberto com essa funcionalidade aguardando aprovação <a class=link href=https://github.com/the-dext/RunCoverletReport/pull/19 target=_blank rel=noopener>aqui</a>.</p></blockquote><h2 id=validando-uma-cobertura-mínima-na-pipeline-de-build>Validando uma cobertura mínima na pipeline de build <a href=#validando-uma-cobertura-mínima-na-pipeline-de-build class=header-link arialabel=Anchor><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>Link to this section</title><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg></a></h2><p>Assim como com as regras de estilo e qualidade do código, que eu falei no meu <a class=link href=/pt/p/validando-regras-de-estilo-de-codigo-no-.net-em-tempo-de-compilacao/>post anterior</a>, precisamos validar um percentual mínimo de cobertura de código na nossa pipeline de build para manter o nível de qualidade no nosso código. O Coverlet tem um parâmetro <code>Threshold</code> onde podemos definir o percentual mínimo para caso esse percentual não seja atingido, a execução dos testes retorne uma falha:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>dotnet <span class=nb>test</span> -p:CollectCoverage<span class=o>=</span><span class=nb>true</span> -p:CoverletOutputFormat<span class=o>=</span>opencover -p:CoverletOutput<span class=o>=</span>TestResults -p:SkipAutoProps<span class=o>=</span><span class=nb>true</span> -p:Threshold<span class=o>=</span><span class=m>80</span>

@@ -51,17 +51,17 @@
 </span></span><span class=line><span class=cl><span class=p>{</span>
 </span></span><span class=line><span class=cl><span class=na>    [ApiController]</span>
 </span></span><span class=line><span class=cl><span class=na>    [Route(&#34;[controller]</span><span class=s>&#34;)]
-</span></span></span><span class=line><span class=cl><span class=s></span>    <span class=k>public</span> <span class=k>class</span> <span class=nc>PokemonInfoController</span> <span class=p>:</span> <span class=n>ControllerBase</span>
+</span></span></span><span class=line><span class=cl><span class=s></span>    <span class=kd>public</span> <span class=k>class</span> <span class=nc>PokemonInfoController</span> <span class=p>:</span> <span class=n>ControllerBase</span>
 </span></span><span class=line><span class=cl>    <span class=p>{</span>
-</span></span><span class=line><span class=cl>        <span class=k>private</span> <span class=k>readonly</span> <span class=n>IConfiguration</span> <span class=n>_configuration</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=kd>private</span> <span class=k>readonly</span> <span class=n>IConfiguration</span> <span class=n>_configuration</span><span class=p>;</span>
 </span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl>        <span class=k>public</span> <span class=n>PokemonInfoController</span><span class=p>(</span><span class=n>IConfiguration</span> <span class=n>configuration</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=kd>public</span> <span class=n>PokemonInfoController</span><span class=p>(</span><span class=n>IConfiguration</span> <span class=n>configuration</span><span class=p>)</span>
 </span></span><span class=line><span class=cl>        <span class=p>{</span>
 </span></span><span class=line><span class=cl>            <span class=n>_configuration</span> <span class=p>=</span> <span class=n>configuration</span><span class=p>;</span>
 </span></span><span class=line><span class=cl>        <span class=p>}</span>
 </span></span><span class=line><span class=cl><span class=na>
 </span></span></span><span class=line><span class=cl><span class=na>        [HttpGet(&#34;{pokemonName}&#34;)]</span>
-</span></span><span class=line><span class=cl>        <span class=k>public</span> <span class=k>async</span> <span class=n>Task</span><span class=p>&lt;</span><span class=n>ActionResult</span><span class=p>&lt;</span><span class=n>PokemonInfo</span><span class=p>&gt;&gt;</span> <span class=n>GetAsync</span><span class=p>(</span><span class=kt>string</span> <span class=n>pokemonName</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=kd>public</span> <span class=kd>async</span> <span class=n>Task</span><span class=p>&lt;</span><span class=n>ActionResult</span><span class=p>&lt;</span><span class=n>PokemonInfo</span><span class=p>&gt;&gt;</span> <span class=n>GetAsync</span><span class=p>(</span><span class=kt>string</span> <span class=n>pokemonName</span><span class=p>)</span>
 </span></span><span class=line><span class=cl>        <span class=p>{</span>
 </span></span><span class=line><span class=cl>            <span class=k>try</span>
 </span></span><span class=line><span class=cl>            <span class=p>{</span>
@@ -123,17 +123,17 @@
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl><span class=k>namespace</span> <span class=nn>PokemonInfoAPI.IntegrationTests</span>
 </span></span><span class=line><span class=cl><span class=p>{</span>
-</span></span><span class=line><span class=cl>    <span class=k>public</span> <span class=k>class</span> <span class=nc>PokemonInfoTests</span><span class=p>:</span> <span class=n>IClassFixture</span><span class=p>&lt;</span><span class=n>WebApplicationFactory</span><span class=p>&lt;</span><span class=n>Program</span><span class=p>&gt;&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=kd>public</span> <span class=k>class</span> <span class=nc>PokemonInfoTests</span><span class=p>:</span> <span class=n>IClassFixture</span><span class=p>&lt;</span><span class=n>WebApplicationFactory</span><span class=p>&lt;</span><span class=n>Program</span><span class=p>&gt;&gt;</span>
 </span></span><span class=line><span class=cl>    <span class=p>{</span>
-</span></span><span class=line><span class=cl>        <span class=k>private</span> <span class=k>readonly</span> <span class=n>WebApplicationFactory</span><span class=p>&lt;</span><span class=n>Program</span><span class=p>&gt;</span> <span class=n>_factory</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=kd>private</span> <span class=k>readonly</span> <span class=n>WebApplicationFactory</span><span class=p>&lt;</span><span class=n>Program</span><span class=p>&gt;</span> <span class=n>_factory</span><span class=p>;</span>
 </span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl>        <span class=k>public</span> <span class=n>PokemonInfoTests</span><span class=p>(</span><span class=n>WebApplicationFactory</span><span class=p>&lt;</span><span class=n>Program</span><span class=p>&gt;</span> <span class=n>factory</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=kd>public</span> <span class=n>PokemonInfoTests</span><span class=p>(</span><span class=n>WebApplicationFactory</span><span class=p>&lt;</span><span class=n>Program</span><span class=p>&gt;</span> <span class=n>factory</span><span class=p>)</span>
 </span></span><span class=line><span class=cl>        <span class=p>{</span>
 </span></span><span class=line><span class=cl>            <span class=n>_factory</span> <span class=p>=</span> <span class=n>factory</span><span class=p>;</span>
 </span></span><span class=line><span class=cl>        <span class=p>}</span>
 </span></span><span class=line><span class=cl><span class=na>
 </span></span></span><span class=line><span class=cl><span class=na>        [Fact]</span>
-</span></span><span class=line><span class=cl>        <span class=k>public</span> <span class=k>async</span> <span class=n>Task</span> <span class=n>Get_Existing_Pokemon_Returns_200</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>        <span class=kd>public</span> <span class=kd>async</span> <span class=n>Task</span> <span class=n>Get_Existing_Pokemon_Returns_200</span><span class=p>()</span>
 </span></span><span class=line><span class=cl>        <span class=p>{</span>
 </span></span><span class=line><span class=cl>            <span class=c1>//Arrange</span>
 </span></span><span class=line><span class=cl>            <span class=kt>var</span> <span class=n>HttpClient</span> <span class=p>=</span> <span class=n>Factory</span><span class=p>.</span><span class=n>CreateClient</span><span class=p>();</span>
@@ -234,7 +234,7 @@
 </span><span class=lnt>39
 </span><span class=lnt>40
 </span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-csharp data-lang=csharp><span class=line><span class=cl><span class=na>[Fact]</span>
-</span></span><span class=line><span class=cl><span class=k>public</span> <span class=k>async</span> <span class=n>Task</span> <span class=n>Get_Existing_Pokemon_Returns_200</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=kd>public</span> <span class=kd>async</span> <span class=n>Task</span> <span class=n>Get_Existing_Pokemon_Returns_200</span><span class=p>()</span>
 </span></span><span class=line><span class=cl><span class=p>{</span>
 </span></span><span class=line><span class=cl>    <span class=c1>//Arrange</span>
 </span></span><span class=line><span class=cl>    <span class=kt>var</span> <span class=n>WireMockSvr</span> <span class=p>=</span> <span class=n>WireMockServer</span><span class=p>.</span><span class=n>Start</span><span class=p>();</span>
@@ -306,7 +306,7 @@
 </span><span class=lnt>31
 </span><span class=lnt>32
 </span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-csharp data-lang=csharp><span class=line><span class=cl><span class=na>[Fact]</span>
-</span></span><span class=line><span class=cl><span class=k>public</span> <span class=k>async</span> <span class=n>Task</span> <span class=n>Get_NotExisting_Pokemon_Returns_404</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=kd>public</span> <span class=kd>async</span> <span class=n>Task</span> <span class=n>Get_NotExisting_Pokemon_Returns_404</span><span class=p>()</span>
 </span></span><span class=line><span class=cl><span class=p>{</span>
 </span></span><span class=line><span class=cl>    <span class=c1>//Arrange</span>
 </span></span><span class=line><span class=cl>    <span class=kt>var</span> <span class=n>WireMockSvr</span> <span class=p>=</span> <span class=n>WireMockServer</span><span class=p>.</span><span class=n>Start</span><span class=p>();</span>
