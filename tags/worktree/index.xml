@@ -3,10 +3,4 @@ In these situations, we have some options:
 Clone again to another folder: This was the option that I used up until some time ago, but if you are working on a big code base, it may take some time to download the remote repository and it will use more space in the disk because you will end up with one copy of the repository for each branch;
 Stash or commit changes and checkout the other branch: This is ok, but it takes more steps and doesn't allow for multiple branches checked out in parallel;
 Add a new working tree: This is what I prefer to do because I can have only one local repository shared between the branches.
-In this post, I'll show how to use Git working trees to make those branch switches easier.</description><postDescription>
-When working on a project, many times we have to switch to a different branch to help a colleague, fix a bug, or to work on another feature (because of a change in priorities or blocks).
-In these situations, we have some options:
-Clone again to another folder: This was the option that I used up until some time ago, but if you are working on a big code base, it may take some time to download the remote repository and it will use more space in the disk because you will end up with one copy of the repository for each branch;
-Stash or commit changes and checkout the other branch: This is ok, but it takes more steps and doesn't allow for multiple branches checked out in parallel;
-Add a new working tree: This is what I prefer to do because I can have only one local repository shared between the branches.
-In this post, I'll show how to use Git working trees to make those branch switches easier.</postDescription></item></channel></rss>
+In this post, I'll show how to use Git working trees to make those branch switches easier.</description></item></channel></rss>
