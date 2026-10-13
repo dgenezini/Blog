@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Notes on Daniel Genezini</title><link>https://blog.genezini.com/notes/</link><description>Recent content in Notes on Daniel Genezini</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>2022 Daniel Genezini All rights reserved</copyright><lastBuildDate>Wed, 30 Sep 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.genezini.com/notes/index.xml" rel="self" type="application/rss+xml"/><item><title>The case for a personal changelog</title><link>https://blog.genezini.com/notes/the-case-for-a-personal-changelog/</link><pubDate>Wed, 30 Sep 2026 00:00:00 +0000</pubDate><guid>https://blog.genezini.com/notes/the-case-for-a-personal-changelog/</guid><description>&lt;p>Every repo I own keeps a &lt;code>CHANGELOG.md&lt;/code>, and beyond that there is one plain text file with the things that do not belong to a repo: a firewall rule, a DNS entry, a systemd unit that exists for a reason I will not remember.&lt;/p>
+&lt;p>The format is deliberately boring — date, what changed, why, and how to undo it. Ten seconds per entry, and it has already answered &amp;ldquo;why is this port open&amp;rdquo; twice this year.&lt;/p></description></item><item><title>Riding OneDrive on Linux (it still hurts)</title><link>https://blog.genezini.com/notes/riding-onedrive-on-linux-it-still-hurts/</link><pubDate>Sat, 12 Sep 2026 00:00:00 +0000</pubDate><guid>https://blog.genezini.com/notes/riding-onedrive-on-linux-it-still-hurts/</guid><description>&lt;p>There is no first-party client, so the realistic options are a browser or the abraunegg client. The client wins on the one thing that matters: it can be trusted to run headless as a systemd user service.&lt;/p>
+&lt;p>First run goes out with &lt;code>--dry-run&lt;/code> and a conflict policy I chose on purpose (&lt;code>--resync&lt;/code> is the sledgehammer; read what it deletes before running it). Inotify watches on a large tree need &lt;code>fs.inotify.max_user_watches&lt;/code> raised, and the sync log is the actual interface — read it or be surprised.&lt;/p></description></item><item><title>Testcontainers with rootless Podman</title><link>https://blog.genezini.com/notes/testcontainers-with-rootless-podman/</link><pubDate>Thu, 20 Aug 2026 00:00:00 +0000</pubDate><guid>https://blog.genezini.com/notes/testcontainers-with-rootless-podman/</guid><description>&lt;p>I run Podman rootless, which means the Docker socket Testcontainers expects simply is not there. The fix is one environment pair and a socket path that actually exists:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="nb">export&lt;/span> &lt;span class="nv">DOCKER_HOST&lt;/span>&lt;span class="o">=&lt;/span>unix:///run/user/&lt;span class="k">$(&lt;/span>id -u&lt;span class="k">)&lt;/span>/podman/podman.sock
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">export&lt;/span> &lt;span class="nv">TESTCONTAINERS_RYUK_DISABLED&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="nb">true&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>Ryuk needs a socket it can mount, and the rootless one is not it. Without Ryuk you own cleanup — a nightly &lt;code>podman ps --filter label=...&lt;/code> sweep handles leftovers.&lt;/p>
+&lt;p>Two gotchas survived consolidation. The socket must be running (&lt;code>systemctl --user enable --now podman.socket&lt;/code>), and Docker.DotNet caches the endpoint per process — set the variables before the first client is constructed, not inside a fixture.&lt;/p></description></item><item><title>Renovate, but for your compose files</title><link>https://blog.genezini.com/notes/renovate-but-for-your-compose-files/</link><pubDate>Sat, 08 Aug 2026 00:00:00 +0000</pubDate><guid>https://blog.genezini.com/notes/renovate-but-for-your-compose-files/</guid><description>&lt;p>The mental model that unlocked Renovate for me: it is a match-and-replace engine, and the package ecosystems are just presets. A &lt;code>customManagers&lt;/code> regex entry makes any version string in any file a dependency.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-json" data-lang="json">&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;customManagers&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">[{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;customType&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;regex&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;fileMatch&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="s2">&amp;#34;docker-compose\\.ya?ml$&amp;#34;&lt;/span>&lt;span class="p">],&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;matchStrings&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="s2">&amp;#34;image: (?&amp;lt;depName&amp;gt;\\S+):(?&amp;lt;currentValue&amp;gt;\\S+)&amp;#34;&lt;/span>&lt;span class="p">],&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nt">&amp;#34;datasourceTemplate&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;docker&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>The value is not freshness for its own sake — it is that the bump arrives as a pull request on a quiet morning instead of as a surprise during an incident. Digest pinning plus grouping keeps the noise proportional to the risk.&lt;/p></description></item><item><title>Blazor JS interop without the ceremony</title><link>https://blog.genezini.com/notes/blazor-js-interop-without-the-ceremony/</link><pubDate>Sat, 01 Aug 2026 00:00:00 +0000</pubDate><guid>https://blog.genezini.com/notes/blazor-js-interop-without-the-ceremony/</guid><description>&lt;p>The interop that bites is the one called too early. During prerender there is no JavaScript, so anything in &lt;code>OnInitializedAsync&lt;/code> that touches &lt;code>IJSRuntime&lt;/code> either throws or silently no-ops depending on the render mode.&lt;/p>
+&lt;p>The shape that has held up: import the module once, keep the &lt;code>IJSObjectReference&lt;/code>, call it in &lt;code>OnAfterRenderAsync(firstRender: true)&lt;/code>, and release it in &lt;code>IAsyncDisposable&lt;/code>.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-csharp" data-lang="csharp">&lt;span class="line">&lt;span class="cl">&lt;span class="kd">private&lt;/span> &lt;span class="n">IJSObjectReference&lt;/span>&lt;span class="p">?&lt;/span> &lt;span class="n">module&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kd">protected&lt;/span> &lt;span class="kd">override&lt;/span> &lt;span class="kd">async&lt;/span> &lt;span class="n">Task&lt;/span> &lt;span class="n">OnAfterRenderAsync&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kt">bool&lt;/span> &lt;span class="n">firstRender&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(!&lt;/span>&lt;span class="n">firstRender&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">return&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">module&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="k">await&lt;/span> &lt;span class="n">JS&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">InvokeAsync&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">IJSObjectReference&lt;/span>&lt;span class="p">&amp;gt;(&lt;/span>&lt;span class="s">&amp;#34;import&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s">&amp;#34;./chart.js&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">await&lt;/span> &lt;span class="n">module&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">InvokeVoidAsync&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;draw&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">elementRef&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>One import per component instance is fine at this scale; the ceremony people add around shared module caching is a different problem.&lt;/p></description></item><item><title>systemd timers without the ceremony</title><link>https://blog.genezini.com/notes/systemd-timers-without-the-ceremony/</link><pubDate>Fri, 10 Jul 2026 00:00:00 +0000</pubDate><guid>https://blog.genezini.com/notes/systemd-timers-without-the-ceremony/</guid><description>&lt;p>Cron keeps getting replaced by two files that do what cron does plus logs, dependencies, and catch-up runs. The minimum pair:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-ini" data-lang="ini">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># backup.timer&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">[Timer]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na">OnCalendar&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s">daily&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na">Persistent&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s">true&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>with a &lt;code>Type=oneshot&lt;/code> service beside it. &lt;code>Persistent=true&lt;/code> is the one directive cron cannot give you: a missed run catches up after boot instead of silently skipping.&lt;/p>
+&lt;p>&lt;code>systemctl list-timers&lt;/code> is the whole dashboard, and &lt;code>journalctl -u backup.service&lt;/code> is the whole log story. RandomizedDelaySec on anything that phones home avoids the thundering herd at midnight.&lt;/p></description></item><item><title>Pull requests as reading practice</title><link>https://blog.genezini.com/notes/pull-requests-as-reading-practice/</link><pubDate>Thu, 02 Jul 2026 00:00:00 +0000</pubDate><guid>https://blog.genezini.com/notes/pull-requests-as-reading-practice/</guid><description>&lt;p>I read pull requests I am not assigned to. Not to comment on every one — the habit is reading, and leaving a question only where a question is genuinely owed.&lt;/p>
+&lt;p>Fifteen minutes a day buys context that status meetings cannot: where the codebase is actually moving, which abstractions are straining, and who is about to need help.&lt;/p>
+&lt;p>The failure mode is turning reading into reviewing. Unrequested nitpicks cost the team more than the missed typo ever would; the rule I keep is that the comment must be worth the author&amp;rsquo;s next ten minutes.&lt;/p></description></item><item><title>Flaky tests are a scheduling problem</title><link>https://blog.genezini.com/notes/flaky-tests-are-a-scheduling-problem/</link><pubDate>Sun, 28 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.genezini.com/notes/flaky-tests-are-a-scheduling-problem/</guid><description>&lt;p>Chasing a flaky test as a mystery wastes days. Chasing it as a scheduling bug is usually one afternoon, because the suspects are three: shared state between tests, dependence on wall-clock time, and dependence on real IO order.&lt;/p>
+&lt;p>The fixes are correspondingly boring. Fixtures that cannot leak (&lt;code>async&lt;/code> setup/teardown per test, no static caches), a fake clock injected rather than &lt;code>DateTime.Now&lt;/code>, and a container per suite instead of a shared database with yesterday&amp;rsquo;s rows.&lt;/p></description></item><item><title>Espresso: preinfusion by feel</title><link>https://blog.genezini.com/notes/espresso-preinfusion-by-feel/</link><pubDate>Mon, 15 Jun 2026 00:00:00 +0000</pubDate><guid>https://blog.genezini.com/notes/espresso-preinfusion-by-feel/</guid><description>&lt;p>Wetting the puck at low flow for three to five seconds before opening the pump costs nothing and forgives a lot: fewer channeling spurts, and the first drops arrive sweeter instead of sharp.&lt;/p>
+&lt;p>It is not pressure profiling — it is one gesture, done by hand, at the lever. On my machine that is easing the pump on and counting. The puck saturates more evenly, so I can grind a notch finer and still hit the same time.&lt;/p></description></item><item><title>Btrfs snapshots before you need them</title><link>https://blog.genezini.com/notes/btrfs-snapshots-before-you-need-them/</link><pubDate>Wed, 20 May 2026 00:00:00 +0000</pubDate><guid>https://blog.genezini.com/notes/btrfs-snapshots-before-you-need-them/</guid><description>&lt;p>Hourly snapshots cost nothing until data changes, which is the point: the price of the safety net is the data you replaced, not the files you kept.&lt;/p>
+&lt;p>The detail that trips everyone: a snapshot of the root subvolume does not include the other subvolumes. &lt;code>/home&lt;/code> living as its own subvolume means the home snapshots are a separate schedule, or they are silently absent.&lt;/p>
+&lt;p>Rollback is where I stop improvising. &lt;code>btrfs subvolume set-default &amp;lt;id&amp;gt; /&lt;/code> and a reboot beats moving directories around by hand — and doing it once in advance, on purpose, is what makes it boring when it matters.&lt;/p></description></item><item><title>Backups that survive you: restic and B2</title><link>https://blog.genezini.com/notes/backups-that-survive-you-restic-and-b2/</link><pubDate>Tue, 05 May 2026 00:00:00 +0000</pubDate><guid>https://blog.genezini.com/notes/backups-that-survive-you-restic-and-b2/</guid><description>&lt;p>One restic repository per machine, encrypted with a passphrase that lives somewhere other than the machine. Backups run from a systemd timer, and the retention policy is explicit:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">restic forget --keep-daily &lt;span class="m">7&lt;/span> --keep-weekly &lt;span class="m">5&lt;/span> --keep-monthly &lt;span class="m">12&lt;/span> --prune
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>Backblaze B2 holds the repo because it is cheap and boring, which is the highest praise storage can get.&lt;/p>
+&lt;p>The part that makes it a backup rather than a hope: a monthly restore drill that pulls three random files to &lt;code>/tmp&lt;/code> and diffs them. An untested backup is a rumor.&lt;/p></description></item><item><title>WireGuard at home, the boring way</title><link>https://blog.genezini.com/notes/wireguard-at-home-the-boring-way/</link><pubDate>Sat, 11 Apr 2026 00:00:00 +0000</pubDate><guid>https://blog.genezini.com/notes/wireguard-at-home-the-boring-way/</guid><description>&lt;p>One key pair per peer, one config file per peer, &lt;code>wg-quick up&lt;/code> — and then it stays up across reboots via the systemd unit, which is the part people reinvent.&lt;/p>
+&lt;p>The home side allows exactly one CIDR and one port. The other side routes nothing except that CIDR; split tunnel by default, because my laptop belongs to hotels as much as to me.&lt;/p>
+&lt;p>MTU 1420 belongs in every config on a consumer router, and the first symptom of getting it wrong is the one that sends people back to logs: SSH works, large pushes hang. That note has saved me an afternoon twice.&lt;/p></description></item><item><title>A field guide to NuGet central package management</title><link>https://blog.genezini.com/notes/a-field-guide-to-nuget-central-package-management/</link><pubDate>Mon, 30 Mar 2026 00:00:00 +0000</pubDate><guid>https://blog.genezini.com/notes/a-field-guide-to-nuget-central-package-management/</guid><description>&lt;p>Central package management moves every version into one &lt;code>Directory.Packages.props&lt;/code>, and suddenly &amp;ldquo;which version is this solution on&amp;rdquo; has one answer instead of forty.&lt;/p>
+&lt;p>The migration order that worked: add the props file, &lt;code>ManagePackageVersionsCentrally&lt;/code>, strip versions from every csproj, restore, then fix the one project that legitimately disagrees with a &lt;code>VersionOverride&lt;/code> — and write a comment explaining why, because future-you will delete it otherwise.&lt;/p>
+&lt;p>Transitive pinning is the sharp edge: it can unify versions that were quietly different, so I run the full test suite after the first central restore, not after tidying the props file.&lt;/p></description></item><item><title>Delta: the git pager I should have known about</title><link>https://blog.genezini.com/notes/delta-the-git-pager-i-should-have-known-about/</link><pubDate>Tue, 03 Mar 2026 00:00:00 +0000</pubDate><guid>https://blog.genezini.com/notes/delta-the-git-pager-i-should-have-known-about/</guid><description>&lt;p>The diff is the most-read output in a developer&amp;rsquo;s day, and it looked like 1998 until I set two lines:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-ini" data-lang="ini">&lt;span class="line">&lt;span class="cl">&lt;span class="k">[core]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="na">pager&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">delta&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">[interactive]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="na">diffFilter&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">delta --color-only&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>Side-by-side mode for reviewing my own work before pushing, unified for reading a PR, and line numbers so &amp;ldquo;the third hunk&amp;rdquo; becomes a coordinate instead of a description.&lt;/p>
+&lt;p>It changes nothing about git. It changes how much of the diff I actually read, which changes what I catch before anyone else has to.&lt;/p></description></item><item><title>AWS SSO for personal accounts</title><link>https://blog.genezini.com/notes/aws-sso-for-personal-accounts/</link><pubDate>Sat, 14 Feb 2026 00:00:00 +0000</pubDate><guid>https://blog.genezini.com/notes/aws-sso-for-personal-accounts/</guid><description>&lt;p>A personal AWS account deserves the same credential hygiene as a company one, and Identity Center makes it cheap: one admin user, one permission set, and &lt;code>aws configure sso&lt;/code> writing profiles into &lt;code>~/.aws/config&lt;/code>.&lt;/p>
+&lt;p>After that, the muscle memory is &lt;code>--profile&lt;/code>, and the long-lived access keys that used to live in &lt;code>~/.aws/credentials&lt;/code> are deleted. Nothing hangs off root except the billing alarm.&lt;/p>
+&lt;p>The cost is a browser login every eight hours. That is the feature.&lt;/p></description></item><item><title>Hario Switch: the recipe I keep</title><link>https://blog.genezini.com/notes/hario-switch-the-recipe-i-keep/</link><pubDate>Tue, 20 Jan 2026 00:00:00 +0000</pubDate><guid>https://blog.genezini.com/notes/hario-switch-the-recipe-i-keep/</guid><description>&lt;p>Twenty grams in, 300 out, water at 93. Bloom with 60 grams for forty seconds with the switch closed, pour to 150 by the minute, then open the switch and pour the rest in circles.&lt;/p>
+&lt;p>The switch is the part that earned its place: a closed steep at the start makes the first pour forgiving of a wobbly kettle, and the drawdown stays even when the grind drifts a click.&lt;/p></description></item><item><title>C# collection expressions in real code</title><link>https://blog.genezini.com/notes/csharp-collection-expressions-in-real-code/</link><pubDate>Sat, 08 Nov 2025 00:00:00 +0000</pubDate><guid>https://blog.genezini.com/notes/csharp-collection-expressions-in-real-code/</guid><description>&lt;p>&lt;code>int[] a = [1, 2, 3]&lt;/code> is tidy, but the syntax earns its keep in expressions, not declarations: spread operators turn &amp;ldquo;new list from those items plus this one&amp;rdquo; into one line instead of a loop or a &lt;code>AddRange&lt;/code>.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-csharp" data-lang="csharp">&lt;span class="line">&lt;span class="cl">&lt;span class="kt">var&lt;/span> &lt;span class="n">targets&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="p">[..&lt;/span> &lt;span class="n">defaults&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="p">..&lt;/span> &lt;span class="n">overrides&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">extra&lt;/span>&lt;span class="p">];&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>Two places I still write it out: public APIs where the concrete type is part of the contract, and anywhere the compiler silently picks &lt;code>Span&amp;lt;T&amp;gt;&lt;/code> and the benchmark disagrees with the aesthetics.&lt;/p></description></item><item><title>Reading notes: A Philosophy of Software Design</title><link>https://blog.genezini.com/notes/reading-notes-a-philosophy-of-software-design/</link><pubDate>Wed, 01 Oct 2025 00:00:00 +0000</pubDate><guid>https://blog.genezini.com/notes/reading-notes-a-philosophy-of-software-design/</guid><description>&lt;p>The book&amp;rsquo;s durable idea for me is the deep module: an interface narrow enough to hold in your head over an implementation big enough to be worth hiding. Every time I have split a class &amp;ldquo;for single responsibility&amp;rdquo; and ended up with three shallow wrappers, this is the counterweight.&lt;/p>
+&lt;p>The second: complexity is anything that makes a future change harder, and dependencies are the main supplier. That definition turns design arguments into questions with answers — what would this make harder, for whom, when.&lt;/p></description></item></channel></rss>
