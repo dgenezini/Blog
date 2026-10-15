@@ -1,1 +1,41 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>The Garden on Daniel Genezini</title><link>https://blog.genezini.com/garden/</link><description>Recent content in The Garden on Daniel Genezini</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>2022 Daniel Genezini All rights reserved</copyright><atom:link href="https://blog.genezini.com/garden/index.xml" rel="self" type="application/rss+xml"/></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>The Garden on Daniel Genezini</title><link>https://blog.genezini.com/garden/</link><description>Recent content in The Garden on Daniel Genezini</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>2022 Daniel Genezini All rights reserved</copyright><lastBuildDate>Tue, 10 Jun 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.genezini.com/garden/index.xml" rel="self" type="application/rss+xml"/><item><title>Reverting a protected branch with git restore</title><link>https://blog.genezini.com/garden/git-restore/</link><pubDate>Tue, 10 Jun 2025 00:00:00 +0000</pubDate><guid>https://blog.genezini.com/garden/git-restore/</guid><description>&lt;p>&lt;code>develop&lt;/code> and &lt;code>main&lt;/code> are usually protected: no reset, no force-push, so undoing anything means producing new commits on top. &lt;code>git revert&lt;/code> does that, but it asks you to name a commit range, and every merge commit inside it needs a &lt;code>-m&lt;/code> parent decision — on a branch with merges, that is a long list of chances to pick wrong.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">git revert 4dbcaf5419d5b5aa19776d7ed733a163cacd95fe..dbffeb4da345fd0c66b0b7a8193a6582b409cd4a
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The naive fallback is a second clone: check out the target branch in another folder, delete everything except &lt;code>.git&lt;/code>, copy in the contents of the good branch, commit. It works and it is miserable.&lt;/p></description></item><item><title>Rebasing a messy branch in one conflict pass</title><link>https://blog.genezini.com/garden/git-rebase/</link><pubDate>Tue, 18 Apr 2023 00:00:00 +0000</pubDate><guid>https://blog.genezini.com/garden/git-rebase/</guid><description>&lt;p>On a branch that has drifted behind a busy &lt;code>main&lt;/code>, &lt;code>git rebase origin/main&lt;/code> conflicts on the first commit and then asks for the same resolution again for each of the remaining ones — 16 conflicts instead of one. The trick is to stop rebasing &lt;em>commits&lt;/em> you have already made and rebase an empty branch instead, then replay all the work as a single uncommitted change.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">git checkout branch-to-rebase
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">git fetch --all
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">git merge-base branch-to-rebase origin/main &lt;span class="c1"># last commit before the branch&amp;#39;s own work&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Reset to that commit — every difference the branch introduced goes back to the working tree, unstaged:&lt;/p></description></item><item><title>Git aliases: scopes, shell escapes, and the ones I use</title><link>https://blog.genezini.com/garden/git-alias/</link><pubDate>Wed, 04 Jan 2023 00:00:00 +0000</pubDate><guid>https://blog.genezini.com/garden/git-alias/</guid><description>&lt;p>Aliases are the difference between remembering &lt;code>git log --graph --oneline&lt;/code> and typing &lt;code>git graph&lt;/code>. They are ordinary config entries, so an alias only exists in the scope where it was created — and a command that needs a shell is still allowed.&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Scope&lt;/th>
+&lt;th>Applies to&lt;/th>
+&lt;th>Config file&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>&lt;code>local&lt;/code>&lt;/td>
+&lt;td>the current repository&lt;/td>
+&lt;td>&lt;code>.git/config&lt;/code> (Windows: &lt;code>.git\config&lt;/code>)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>global&lt;/code>&lt;/td>
+&lt;td>the current user&lt;/td>
+&lt;td>&lt;code>~/.gitconfig&lt;/code> (Windows: &lt;code>%USERPROFILE%\.gitconfig&lt;/code>)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>system&lt;/code>&lt;/td>
+&lt;td>every user on the machine&lt;/td>
+&lt;td>&lt;code>/etc/gitconfig&lt;/code> (Windows: &lt;code>%PROGRAMDATA%\Git\config&lt;/code>)&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h2 id="creating-one">Creating one&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">git config --global alias.c &lt;span class="s2">&amp;#34;checkout&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">git config --global alias.ec &lt;span class="s2">&amp;#34;commit --allow-empty -m &amp;#39;Empty commit&amp;#39;&amp;#34;&lt;/span> &lt;span class="c1"># single quotes when the command has double quotes&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Or write it straight into the config file under &lt;code>[alias]&lt;/code>:&lt;/p></description></item><item><title>Git one-liners: prune, empty commits, show, grep, graph</title><link>https://blog.genezini.com/garden/git-tips/</link><pubDate>Tue, 27 Dec 2022 00:00:00 +0000</pubDate><guid>https://blog.genezini.com/garden/git-tips/</guid><description>&lt;p>None of these are hidden features; they are the ones that quietly delete a step from a routine. Each one replaces four commands, a branch switch, or a commit you did not mean.&lt;/p>
+&lt;h2 id="prune-on-fetch">Prune on fetch&lt;/h2>
+&lt;p>&lt;code>--prune&lt;/code> deletes local references to remote branches that were themselves deleted:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">git fetch --prune
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Git keeps data unless told to throw it away, which extends to stale refs. Left to accumulate on a repo with branch churn, they make things like &lt;code>git branch -a --contains &amp;lt;commit&amp;gt;&lt;/code> needlessly verbose and slow.&lt;/p></description></item></channel></rss>
