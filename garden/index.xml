@@ -1,0 +1,928 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>The Garden on Daniel Genezini</title><link>https://genezini.com/garden/</link><description>Recent content in The Garden on Daniel Genezini</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>2022 Daniel Genezini All rights reserved</copyright><lastBuildDate>Sun, 23 Aug 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://genezini.com/garden/index.xml" rel="self" type="application/rss+xml"/><item><title>Why coffee tastes sweet without sugar</title><link>https://genezini.com/garden/coffee-sweetness/</link><pubDate>Sun, 23 Aug 2026 00:00:00 +0000</pubDate><guid>https://genezini.com/garden/coffee-sweetness/</guid><description>&lt;p>Green coffee contains sucrose, glucose and fructose; the roasted bean and the cup contain almost none. Black coffee with no sugar added has no meaningful sugar, yet it can taste distinctly sweet.&lt;/p>
+&lt;p>Where the sugar goes: roasting drives the Maillard reaction and caramelisation, which consume sugars and convert them into hundreds of aromatic compounds. What is left is a trace of sugar-derived molecules — and with bitterness and acidity reduced around them, the brain reads those as sweetness.&lt;/p></description></item><item><title>USB WiFi adapters that show up as a CD-ROM</title><link>https://genezini.com/garden/usb-modeswitch/</link><pubDate>Sun, 07 Jun 2026 00:00:00 +0000</pubDate><guid>https://genezini.com/garden/usb-modeswitch/</guid><description>&lt;p>A &amp;ldquo;multi-state&amp;rdquo; USB WiFi adapter carries on-board storage with a Windows driver, so on first plug it enumerates as a CD-ROM or flash drive. Windows autoruns the installer; other OSes see only a disk and no network interface, so the adapter must be told to switch.&lt;/p>
+&lt;p>Most mainstream distributions — Ubuntu, Fedora, Debian, OpenSUSE, Arch — ship &lt;code>usb-modeswitch&lt;/code> with the adapter in its data files and switch silently; hand-switch only when the package is missing, the data predates the adapter, or the device is a rebadged clone.&lt;/p></description></item><item><title>DuckDB: SQLite for analytics, not a vector database</title><link>https://genezini.com/garden/duckdb/</link><pubDate>Sat, 06 Jun 2026 00:00:00 +0000</pubDate><guid>https://genezini.com/garden/duckdb/</guid><description>&lt;p>An analytical database embedded like SQLite — no server, one file or in memory — but built for scans, aggregations and joins, not transactions: &lt;strong>SQLite for analytics&lt;/strong>.&lt;/p>
+&lt;p>Where SQLite stores a row together, DuckDB stores each column separately:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-text" data-lang="text">&lt;span class="line">&lt;span class="cl">row-oriented: [id=1, name=Alice, age=30] [id=2, name=Bob, age=25]
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">column-oriented: id: [1,2,3] name: [Alice,Bob,Carol] age: [30,25,40]
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;code>SELECT AVG(age) FROM users&lt;/code> then reads one column, not every column of every row. It also executes &lt;strong>vectorized&lt;/strong> — chunks of around 1024 rows, not one row at a time — using the CPU cache better and allowing SIMD.&lt;/p></description></item><item><title>Pausing and resuming a process</title><link>https://genezini.com/garden/pause-process/</link><pubDate>Sat, 30 May 2026 00:00:00 +0000</pubDate><guid>https://genezini.com/garden/pause-process/</guid><description>&lt;h2 id="the-foreground-job">The foreground job&lt;/h2>
+&lt;p>&lt;code>Ctrl+Z&lt;/code> sends &lt;code>SIGTSTP&lt;/code> to the foreground job: frozen, memory and file descriptors kept open.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="nb">jobs&lt;/span> &lt;span class="c1"># list suspended jobs and their numbers&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">fg&lt;/span> &lt;span class="c1"># resume the most recent in the foreground&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">bg&lt;/span> &lt;span class="c1"># resume it in the background&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">fg&lt;/span> %2 &lt;span class="c1"># resume job 2&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">bg&lt;/span> %2
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="anything-else">Anything else&lt;/h2>
+&lt;p>Find the PID, then signal:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">ps aux &lt;span class="p">|&lt;/span> grep &amp;lt;process_name&amp;gt;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">pidof &amp;lt;process_name&amp;gt;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo &lt;span class="nb">kill&lt;/span> -STOP &amp;lt;PID&amp;gt; &lt;span class="c1"># or kill -SIGSTOP&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo &lt;span class="nb">kill&lt;/span> -CONT &amp;lt;PID&amp;gt; &lt;span class="c1"># or kill -SIGCONT&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;code>SIGSTOP&lt;/code> cannot be caught or ignored — reliable when you do not control the process.&lt;/p></description></item><item><title>Upgrading Alpine to a new release branch</title><link>https://genezini.com/garden/alpine-upgrade/</link><pubDate>Sat, 30 May 2026 00:00:00 +0000</pubDate><guid>https://genezini.com/garden/alpine-upgrade/</guid><description>&lt;p>Three steps in &lt;code>sys&lt;/code> mode — edit the repositories file, refresh the index, upgrade everything; in-branch security updates are separate. Back up and read the release notes first.&lt;/p>
+&lt;h2 id="point-at-the-new-branch">Point at the new branch&lt;/h2>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">setup-apkrepos
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;code>e&lt;/code> opens it in vi; or in one line, moving 3.22 to 3.23:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">sed -i -e &lt;span class="s1">&amp;#39;s/ v3.22 / v3.23 /g&amp;#39;&lt;/span> /etc/apk/repositories
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-text" data-lang="text">&lt;span class="line">&lt;span class="cl">http://dl-3.alpinelinux.org/alpine/v3.22/main
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">http://dl-3.alpinelinux.org/alpine/v3.22/community
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;code>latest-stable&lt;/code> avoids editing the file each release:&lt;/p></description></item><item><title>Atuin: shell history that syncs</title><link>https://genezini.com/garden/atuin/</link><pubDate>Sun, 24 May 2026 00:00:00 +0000</pubDate><guid>https://genezini.com/garden/atuin/</guid><description>&lt;p>Atuin replaces shell history search: full-text and fuzzy search over a SQLite database rather than a flat history file, per-directory and per-session context, statistics, optional end-to-end encryption, and sync between machines. In zsh it replaces the default &lt;code>Ctrl+R&lt;/code> reverse search.&lt;/p>
+&lt;h2 id="setup">Setup&lt;/h2>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="nb">eval&lt;/span> &lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="k">$(&lt;/span>atuin init zsh&lt;span class="k">)&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>Near the end of &lt;code>.zshrc&lt;/code>, then &lt;code>exec zsh&lt;/code>.&lt;/p>
+&lt;h2 id="fzf">fzf&lt;/h2>
+&lt;p>fzf is optional (Atuin has its own fuzzy search) but still covers file finding, git branch switching, process selection, piped input. &lt;strong>Atuin for history, fzf for everything else.&lt;/strong>&lt;/p></description></item><item><title>fd and plocate: live search versus an index</title><link>https://genezini.com/garden/fd-vs-plocate/</link><pubDate>Sun, 24 May 2026 00:00:00 +0000</pubDate><guid>https://genezini.com/garden/fd-vs-plocate/</guid><description>&lt;p>&lt;strong>fd&lt;/strong> is a filesystem walker, a modern &lt;code>find&lt;/code> replacement: scans on demand, respects &lt;code>.gitignore&lt;/code> by default, takes regex or glob patterns, executes per result.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">fd config ~/.config
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">fd . ~/projects &lt;span class="p">|&lt;/span> fzf
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;strong>plocate&lt;/strong> is a database-backed filename indexer, compatible with &lt;code>locate&lt;/code>: queries a prebuilt index, never touches the disk.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">plocate firefox
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>Trade-off: freshness for speed. &lt;code>fd&lt;/code> sees the disk now — current, slow on large trees; &lt;code>plocate&lt;/code> is near-instant but knows only what &lt;code>updatedb&lt;/code> last indexed, usually via a systemd timer or cron.&lt;/p></description></item><item><title>Analytics basics: layers, parquet, similarity, clustering</title><link>https://genezini.com/garden/analytics-basics/</link><pubDate>Fri, 08 May 2026 00:00:00 +0000</pubDate><guid>https://genezini.com/garden/analytics-basics/</guid><description>&lt;h2 id="the-factory">The factory&lt;/h2>
+&lt;p>Analytics turns raw events — a click, an add-to-cart, a purchase, an approval — into trustworthy, queryable data:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-text" data-lang="text">&lt;span class="line">&lt;span class="cl">Raw logs → Cleaned data → Business metrics → Dashboards
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>Databricks layer names, same progression:&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Layer&lt;/th>
+&lt;th>Holds&lt;/th>
+&lt;th>Shape&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>Bronze&lt;/td>
+&lt;td>raw files, as received&lt;/td>
+&lt;td>append-only, untyped&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Silver&lt;/td>
+&lt;td>cleaned, joined, deduplicated&lt;/td>
+&lt;td>typed tables&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Gold&lt;/td>
+&lt;td>business metrics&lt;/td>
+&lt;td>aggregated, query-ready&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>CSV is the starting interchange format; Parquet is where it settles — columnar, compressed, typed, readable by DuckDB, Spark and Trino. A pipeline&amp;rsquo;s job is movement between layers; the tool is whichever engine does that without becoming maintenance.&lt;/p></description></item><item><title>Bash: scripting, expansion, and shell tricks</title><link>https://genezini.com/garden/bash/</link><pubDate>Wed, 06 May 2026 00:00:00 +0000</pubDate><guid>https://genezini.com/garden/bash/</guid><description>&lt;p>Bash reference: interactive history tricks, a pure-bash scripting library based on &lt;a class="link" href="https://github.com/dylanaraps/pure-bash-bible" target="_blank" rel="noopener"
+>pure-bash-bible&lt;/a>, parameter expansion, and the shell&amp;rsquo;s weirder corners.&lt;/p>
+&lt;h2 id="interactive-shell-tricks">Interactive shell tricks&lt;/h2>
+&lt;p>Create empty files without spawning &lt;code>touch&lt;/code> — the colon is a no-op and redirection creates the file:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">:&amp;gt; filename
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&amp;gt;file
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">printf&lt;/span> &lt;span class="s1">&amp;#39;&amp;#39;&lt;/span> &amp;gt;file
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="history-expansion">History expansion&lt;/h3>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Syntax&lt;/th>
+&lt;th>Effect&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>&lt;code>!!&lt;/code>&lt;/td>
+&lt;td>Repeat last command&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>!prefix&lt;/code>&lt;/td>
+&lt;td>Run last command starting with prefix&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>!$&lt;/code>&lt;/td>
+&lt;td>Last argument of previous command&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>!#:1&lt;/code>&lt;/td>
+&lt;td>First argument of current command line&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>!:1&lt;/code>&lt;/td>
+&lt;td>First argument of previous command&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>^old^new&lt;/code>&lt;/td>
+&lt;td>Find and replace in previous command&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;ul>
+&lt;li>&lt;code>!CD&lt;/code> runs the last command that started with &lt;code>CD&lt;/code>.&lt;/li>
+&lt;li>&lt;code>!$&lt;/code> reruns the previous command&amp;rsquo;s argument — reuse the path from an &lt;code>ls&lt;/code> in another command: &lt;code>envm !$&lt;/code>.&lt;/li>
+&lt;li>&lt;code>!#:1&lt;/code> references the first argument on the current line; &lt;code>!:1&lt;/code> the first argument of the previous command.&lt;/li>
+&lt;li>&lt;code>^fuzzy^fzf&lt;/code> corrects a typo or command name in the previous command in place.&lt;/li>
+&lt;/ul>
+&lt;h3 id="special-parameters">Special parameters&lt;/h3>
+&lt;ul>
+&lt;li>&lt;code>$$&lt;/code> — PID of the current shell. &lt;code>echo $$&lt;/code>.&lt;/li>
+&lt;li>&lt;code>$_&lt;/code> — last argument of the previous command. &lt;code>ls -la mydir&lt;/code>, then &lt;code>echo $_&lt;/code> prints &lt;code>mydir&lt;/code>.&lt;/li>
+&lt;/ul>
+&lt;h3 id="expansion-and-globs">Expansion and globs&lt;/h3>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">mkdir -p mydir2/&lt;span class="o">{&lt;/span>dir1,dir2,dir3&lt;span class="o">}&lt;/span> &lt;span class="c1"># nested dirs in one command&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">rm file&lt;span class="o">[&lt;/span>14&lt;span class="o">]&lt;/span> &lt;span class="c1"># glob removal: file1 and file4&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">cp file.txt&lt;span class="o">{&lt;/span>,.back&lt;span class="o">}&lt;/span> &lt;span class="c1"># creates file.txt.back&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>Brace expansion covers numbers, characters, nesting, zero-padding, and steps:&lt;/p></description></item><item><title>A global gitignore for your own machine</title><link>https://genezini.com/garden/global-gitignore/</link><pubDate>Mon, 04 May 2026 00:00:00 +0000</pubDate><guid>https://genezini.com/garden/global-gitignore/</guid><description>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">git config --global core.excludesfile ~/.gitignore_global
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">touch ~/.gitignore_global
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>Ignored in every repository on the machine: things about your environment, not the project:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-text" data-lang="text">&lt;span class="line">&lt;span class="cl">.DS_Store # macOS
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Thumbs.db # Windows
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">.vscode/ # VS Code
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">.idea/ # JetBrains
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">*.log
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">.env
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>A global ignore is personal, machine-wide, shared with no one. A repository&amp;rsquo;s &lt;code>.gitignore&lt;/code> is committed and shared, describing what the project never wants tracked. Editor and OS junk goes global; project tooling&amp;rsquo;s output goes in the repo.&lt;/p></description></item><item><title>Find which process holds a port</title><link>https://genezini.com/garden/find-process-by-port/</link><pubDate>Mon, 04 May 2026 00:00:00 +0000</pubDate><guid>https://genezini.com/garden/find-process-by-port/</guid><description>&lt;p>&lt;code>ss&lt;/code> is the modern default, usually installed:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">sudo ss -lptn &lt;span class="s1">&amp;#39;sport = :3000&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-text" data-lang="text">&lt;span class="line">&lt;span class="cl">LISTEN 0 128 *:3000 *:* users:((&amp;#34;node&amp;#34;,pid=12345,fd=18))
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;code>lsof&lt;/code> gives a clearer PID plus command path:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">sudo lsof -i :3000
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;code>netstat&lt;/code> on older systems, from &lt;code>net-tools&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">sudo netstat -tulpn &lt;span class="p">|&lt;/span> grep :3000
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;strong>Killing the holder&lt;/strong> — a plain &lt;code>kill&lt;/code> first, &lt;code>-9&lt;/code> only if it refuses:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">sudo &lt;span class="nb">kill&lt;/span> &lt;span class="m">12345&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo fuser -k 3000/tcp
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>To check a port is open, ignoring the owner:&lt;/p></description></item><item><title>GNOME environment variables and login scripts</title><link>https://genezini.com/garden/gnome-autostart-and-environment/</link><pubDate>Mon, 04 May 2026 00:00:00 +0000</pubDate><guid>https://genezini.com/garden/gnome-autostart-and-environment/</guid><description>&lt;h2 id="setting-a-variable-without-logging-out">Setting a variable without logging out&lt;/h2>
+&lt;p>A modern GNOME session runs under systemd; GUI applications inherit that environment:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">systemctl --user set-environment &lt;span class="nv">MY_VAR&lt;/span>&lt;span class="o">=&lt;/span>value
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">dbus-update-activation-environment --systemd &lt;span class="nv">MY_VAR&lt;/span>&lt;span class="o">=&lt;/span>value
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>The first sets it for systemd user services and later shell-launched applications; the second makes D-Bus-activated apps see it, how most GNOME apps start.&lt;/p>
+&lt;p>&lt;code>echo $MY_VAR&lt;/code> prints nothing: variables are copied into a process at start, and your shell predates the change. Shell and systemd user session do not propagate:&lt;/p></description></item><item><title>SQL Anti-joins</title><link>https://genezini.com/garden/anti-joins-and-duplicates/</link><pubDate>Mon, 04 May 2026 00:00:00 +0000</pubDate><guid>https://genezini.com/garden/anti-joins-and-duplicates/</guid><description>&lt;h2 id="rows-with-no-match">Rows with no match&lt;/h2>
+&lt;p>Both find rows in &lt;code>TableA&lt;/code> with no &lt;code>TableB&lt;/code> counterpart:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-sql" data-lang="sql">&lt;span class="line">&lt;span class="cl">&lt;span class="k">SELECT&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">a&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="o">*&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">FROM&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">TableA&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">a&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">LEFT&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">JOIN&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">TableB&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">b&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">ON&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">b&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">AId&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">a&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Id&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">WHERE&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">b&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">AId&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">IS&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">NULL&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">SELECT&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">a&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="o">*&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">FROM&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">TableA&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">a&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">WHERE&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">NOT&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">EXISTS&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="k">SELECT&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">FROM&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">TableB&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">b&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">WHERE&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">b&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">AId&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">a&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Id&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;code>NOT EXISTS&lt;/code> is the better default:&lt;/p>
+&lt;p>&lt;strong>Correctness with NULLs.&lt;/strong> &lt;code>LEFT JOIN&lt;/code> breaks when the join condition is not exactly equivalent, with nullable columns, or when a joined-table filter lands in &lt;code>WHERE&lt;/code> instead of &lt;code>ON&lt;/code> — silently an inner join. Keep every joined-table filter inside &lt;code>ON&lt;/code>:&lt;/p></description></item><item><title>Symlinked .desktop files, and why the window opens behind</title><link>https://genezini.com/garden/desktop-files-and-symlinks/</link><pubDate>Mon, 04 May 2026 00:00:00 +0000</pubDate><guid>https://genezini.com/garden/desktop-files-and-symlinks/</guid><description>&lt;p>&lt;code>~/.local/share/applications&lt;/code> follows symlinks: a &lt;code>.desktop&lt;/code> file can live in dotfiles and be linked in:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">ln -s ~/dotfiles/desktop/myapp.desktop ~/.local/share/applications/myapp.desktop
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;code>xdg-desktop-menu&lt;/code> resolves the link, &lt;code>update-desktop-database&lt;/code> indexes it, &lt;code>gtk-launch&lt;/code>, &lt;code>rofi&lt;/code> and &lt;code>dmenu&lt;/code> find it. Mode 644, no execute bit:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">chmod &lt;span class="m">644&lt;/span> myapp.desktop
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">update-desktop-database ~/.local/share/applications
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">gtk-launch myapp
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>A broken symlink makes the launcher vanish silently; &lt;code>Exec=&lt;/code> paths resolve literally, not via the symlink.&lt;/p>
+&lt;h2 id="exec-and-home">Exec and $HOME&lt;/h2>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-ini" data-lang="ini">&lt;span class="line">&lt;span class="cl">&lt;span class="na">Exec&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s">$HOME/scripts/open-browser.sh %u&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>Works on GNOME, KDE and XFCE, but the Desktop Entry specification does not guarantee it — a stricter launcher may not expand the variable. An absolute path always works:&lt;/p></description></item><item><title>Where HISTSIZE actually comes from</title><link>https://genezini.com/garden/zsh-history-settings/</link><pubDate>Mon, 04 May 2026 00:00:00 +0000</pubDate><guid>https://genezini.com/garden/zsh-history-settings/</guid><description>&lt;p>&lt;code>HISTSIZE&lt;/code> is interactive-only, so &lt;code>.zshenv&lt;/code> is wrong — it runs for every shell, scripts included. It belongs in &lt;code>.zshrc&lt;/code>; several files can set the value you see.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">grep HISTSIZE ~/.zshrc
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">grep HISTSIZE ~/.oh-my-zsh/lib/history.zsh
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">grep HISTSIZE /etc/zsh*
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>Oh My Zsh keeps history settings in &lt;code>~/.oh-my-zsh/lib/history.zsh&lt;/code>, defaults above the 1000 that usually prompts the question; system-wide values come from &lt;code>/etc/zshrc&lt;/code>, &lt;code>/etc/zprofile&lt;/code> or &lt;code>/etc/zshenv&lt;/code>.&lt;/p>
+&lt;p>Value and origin:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="nb">echo&lt;/span> &lt;span class="nv">$HISTSIZE&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">echo&lt;/span> &lt;span class="nv">$SAVEHIST&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">zsh -xv &lt;span class="c1"># every file sourced, in order&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>Change it in &lt;code>.zshrc&lt;/code>, then &lt;code>source ~/.zshrc&lt;/code>:&lt;/p></description></item><item><title>ZRAM compression: lzo-rle by default, lz4 for CPU</title><link>https://genezini.com/garden/zram-compression/</link><pubDate>Mon, 04 May 2026 00:00:00 +0000</pubDate><guid>https://genezini.com/garden/zram-compression/</guid><description>&lt;p>ZRAM compresses memory pages in RAM instead of swapping to disk; the algorithm sets the trade between CPU time and memory saved.&lt;/p>
+&lt;p>The default on most modern distributions is &lt;strong>&lt;code>lzo-rle&lt;/code>&lt;/strong>: very fast, low CPU overhead, reasonable ratio. Confirm what is active — the bracketed entry is in use:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">cat /sys/block/zram0/comp_algorithm
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-text" data-lang="text">&lt;span class="line">&lt;span class="cl">lzo [lzo-rle] lz4 lz4hc zstd
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Algorithm&lt;/th>
+&lt;th>CPU cost&lt;/th>
+&lt;th>Speed&lt;/th>
+&lt;th>Ratio&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>&lt;code>lz4&lt;/code>&lt;/td>
+&lt;td>lowest&lt;/td>
+&lt;td>very fast&lt;/td>
+&lt;td>worst&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>lzo-rle&lt;/code>&lt;/td>
+&lt;td>low&lt;/td>
+&lt;td>very fast&lt;/td>
+&lt;td>medium&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>lzo&lt;/code>&lt;/td>
+&lt;td>low&lt;/td>
+&lt;td>fast&lt;/td>
+&lt;td>medium&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>zstd&lt;/code>&lt;/td>
+&lt;td>higher&lt;/td>
+&lt;td>slower&lt;/td>
+&lt;td>best&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>lz4hc&lt;/code>&lt;/td>
+&lt;td>high&lt;/td>
+&lt;td>slow&lt;/td>
+&lt;td>better than lz4&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>Pick &lt;code>lz4&lt;/code> when the CPU is weak or loaded and RAM is cheaper than cycles, &lt;code>lzo-rle&lt;/code> for the default balance, &lt;code>zstd&lt;/code> when memory is scarce and CPU is not.&lt;/p></description></item><item><title>Zsh completion: compinit, compdef, and custom commands</title><link>https://genezini.com/garden/zsh-completion/</link><pubDate>Mon, 04 May 2026 00:00:00 +0000</pubDate><guid>https://genezini.com/garden/zsh-completion/</guid><description>&lt;p>Completion is function-based: on &lt;code>Tab&lt;/code> zsh finds a &lt;strong>completion function&lt;/strong> matching the command name, and it must exist. Zsh reads no &lt;code>--help&lt;/code>.&lt;/p>
+&lt;p>Minimum setup:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">autoload -Uz compinit
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">compinit
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">zstyle &lt;span class="s1">&amp;#39;:completion:*&amp;#39;&lt;/span> menu &lt;span class="k">select&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">zstyle &lt;span class="s1">&amp;#39;:completion:*&amp;#39;&lt;/span> matcher-list &lt;span class="s1">&amp;#39;m:{a-z}={A-Z}&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">setopt AUTO_MENU
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">setopt COMPLETE_IN_WORD
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;code>compinit&lt;/code> loads completion and builds a dump file, &lt;code>~/.zcompdump&lt;/code>. Rebuild it if changes do not appear, or zsh warns about an insecure completion directory:&lt;/p></description></item><item><title>Arch setup notes: firmware, libvirt networking, fingerprint login</title><link>https://genezini.com/garden/arch-setup-notes/</link><pubDate>Sat, 02 May 2026 00:00:00 +0000</pubDate><guid>https://genezini.com/garden/arch-setup-notes/</guid><description>&lt;p>Each line was found once and would otherwise be found again; nothing is distribution-specific but the package manager.&lt;/p>
+&lt;h2 id="firmware">Firmware&lt;/h2>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">sudo pacman -S gnome-firmware
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="the-libvirt-default-network">The libvirt default network&lt;/h2>
+&lt;p>&lt;code>libvirt&lt;/code> ships the &lt;code>default&lt;/code> network inactive: NAT, backed by &lt;code>dnsmasq&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">sudo pacman -S dnsmasq
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo virsh net-list --all
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo virsh net-autostart default
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo virsh net-start default
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;code>net-autostart&lt;/code> survives a reboot; &lt;code>net-start&lt;/code> covers only this session.&lt;/p>
+&lt;h2 id="flameshot-on-wayland">Flameshot on Wayland&lt;/h2>
+&lt;p>Under Wayland, Flameshot cannot grab the screen from a GNOME shortcut: no terminal to attach to. Wrapping it in &lt;code>script&lt;/code> supplies one:&lt;/p></description></item><item><title>Borg restore, partial loss, and silent exits</title><link>https://genezini.com/garden/borg-restore-and-recovery/</link><pubDate>Fri, 17 Apr 2026 00:00:00 +0000</pubDate><guid>https://genezini.com/garden/borg-restore-and-recovery/</guid><description>&lt;h2 id="restoring">Restoring&lt;/h2>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">borg list /path/to/repo
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">borg list /path/to/repo::daily-2026-01-21 home/daniel
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">borg extract /path/to/repo::daily-2026-01-21 home/daniel/Documents
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;code>extract&lt;/code> writes into the &lt;strong>current directory&lt;/strong> and recreates the stored path — from &lt;code>/tmp/restore&lt;/code> you get &lt;code>/tmp/restore/home/daniel/Documents&lt;/code>, not an overwritten live tree. Listing a subpath confirms the path.&lt;/p>
+&lt;h2 id="finding-a-file">Finding a file&lt;/h2>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">borg list /path/to/repo::archive-name &lt;span class="p">|&lt;/span> grep savegame
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">borg list /path/to/repo::archive-name --pattern &lt;span class="s1">&amp;#39;**/*filename*&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>Across every archive, slow on a large repo but thorough:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="k">for&lt;/span> a in &lt;span class="k">$(&lt;/span>borg list /path/to/repo&lt;span class="k">)&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">do&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">echo&lt;/span> &lt;span class="s2">&amp;#34;== &lt;/span>&lt;span class="nv">$a&lt;/span>&lt;span class="s2"> ==&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> borg list /path/to/repo::&lt;span class="nv">$a&lt;/span> &lt;span class="p">|&lt;/span> grep filename
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">done&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>Borg has no queryable index: searches read archive listings, so &lt;code>--pattern&lt;/code> beats piping through &lt;code>grep&lt;/code>.&lt;/p></description></item><item><title>Borg: what a backup contains, and what retention keeps</title><link>https://genezini.com/garden/borg-retention-and-inspection/</link><pubDate>Fri, 17 Apr 2026 00:00:00 +0000</pubDate><guid>https://genezini.com/garden/borg-retention-and-inspection/</guid><description>&lt;h2 id="what-takes-the-space">What takes the space&lt;/h2>
+&lt;p>&lt;code>borg list --format&lt;/code> prints raw byte sizes by field: sort and &lt;code>tail&lt;/code> to find heavy files:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">borg list --format &lt;span class="s1">&amp;#39;{size:&amp;gt;12} {path}{NL}&amp;#39;&lt;/span> ~/backup::desktop-2026-05-06 &lt;span class="p">|&lt;/span> sort -n &lt;span class="p">|&lt;/span> tail -50
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-text" data-lang="text">&lt;span class="line">&lt;span class="cl">1200000000 /home/user/videos/movie.mkv
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">420000000 /home/user/photos/raw.zip
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;code>numfmt --to=iec&lt;/code> reads them as &lt;code>1.2G&lt;/code>, &lt;code>850M&lt;/code>, &lt;code>420M&lt;/code>; such findings usually mean a directory to exclude, not a Borg problem.&lt;/p>
+&lt;h2 id="verifying-without-restoring">Verifying without restoring&lt;/h2>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">borg check /path/to/repo
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">borg check user@host:/path/to/repo
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">borg check --verify-data /path/to/repo::archive-name
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">borg check --repository-only /path/to/repo
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;code>borg check&lt;/code> verifies repository structure, metadata and archive consistency. &lt;code>--verify-data&lt;/code> also reads and hashes contents — much slower, the only proof the data is intact. &lt;code>--repository-only&lt;/code> limits the check to the repository, an archive argument to that archive.&lt;/p></description></item><item><title>Channeling: what the naked portafilter is telling you</title><link>https://genezini.com/garden/channeling/</link><pubDate>Fri, 17 Apr 2026 00:00:00 +0000</pubDate><guid>https://genezini.com/garden/channeling/</guid><description>&lt;p>Channeling is water taking the path of least resistance through the puck: it finds a crack or loose patch and drives a channel through it instead of pushing evenly through the coffee. Parts of the puck get too much water and turn bitter, parts too little and stay sour. Both arrive at once — the signature.&lt;/p>
+&lt;p>A bottomless portafilter does not cause it. It removes the spouts that were hiding it.&lt;/p></description></item><item><title>Cloudflare Email Routing into Gmail, and the alerts it does not send</title><link>https://genezini.com/garden/cloudflare-email-routing/</link><pubDate>Fri, 17 Apr 2026 00:00:00 +0000</pubDate><guid>https://genezini.com/garden/cloudflare-email-routing/</guid><description>&lt;h2 id="why-forwarded-mail-lands-in-spam">Why forwarded mail lands in spam&lt;/h2>
+&lt;p>Cloudflare Email Routing forwards mail from &lt;code>you@yourdomain.com&lt;/code> to an inbox. As a &lt;strong>forwarder&lt;/strong> it becomes the sender Gmail sees, so the original domain&amp;rsquo;s SPF and DKIM results stop matching the delivering server and Gmail defaults to suspicion. Records must be &lt;strong>relaxed&lt;/strong>, not strict.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-text" data-lang="text">&lt;span class="line">&lt;span class="cl">v=spf1 include:_spf.mx.cloudflare.net ~all
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-text" data-lang="text">&lt;span class="line">&lt;span class="cl">v=DMARC1; p=none; sp=none; aspf=r; adkim=r; rua=mailto:dmarc-reports@yourdomain.com
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;code>aspf=r&lt;/code> and &lt;code>adkim=r&lt;/code> stop a forwarded message being penalised for a check it cannot pass. &lt;code>p=none&lt;/code> is the starting policy; &lt;code>quarantine&lt;/code> or &lt;code>reject&lt;/code> comes later, once delivery is stable.&lt;/p></description></item><item><title>Dialing in espresso: dose, yield, time</title><link>https://genezini.com/garden/espresso-dialing-in/</link><pubDate>Fri, 17 Apr 2026 00:00:00 +0000</pubDate><guid>https://genezini.com/garden/espresso-dialing-in/</guid><description>&lt;p>&amp;ldquo;Dialing in&amp;rdquo; comes from the analog dial — the knobs on an old radio, later an espresso machine&amp;rsquo;s pressure gauge. It means tuning the variables until the shot tastes right.&lt;/p>
+&lt;h2 id="the-variables">The variables&lt;/h2>
+&lt;p>Grind size is the most sensitive and the one you move; the rest are constants you hold still:&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Variable&lt;/th>
+&lt;th>Value&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>Dose (double basket)&lt;/td>
+&lt;td>17–18 g&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Yield&lt;/td>
+&lt;td>36–40 g&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Time&lt;/td>
+&lt;td>25–30 s&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Ratio&lt;/td>
+&lt;td>1:2&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>A Gaggia Classic Pro with its stock non-pressurized 58 mm basket works at 18 g in, 36 g out. Brew temperature is the fifth variable, and without a PID it is not under your control.&lt;/p></description></item><item><title>Fingerprint login: PAM decides who gets asked</title><link>https://genezini.com/garden/fingerprint-pam/</link><pubDate>Fri, 17 Apr 2026 00:00:00 +0000</pubDate><guid>https://genezini.com/garden/fingerprint-pam/</guid><description>&lt;p>&lt;code>fprintd&lt;/code> owns the reader and answers authentication requests; the attempt count before password fallback is a parameter on the &lt;strong>PAM module line&lt;/strong> that calls it.&lt;/p>
+&lt;h2 id="is-the-reader-or-the-pam-stack-the-problem">Is the reader or the PAM stack the problem&lt;/h2>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">fprintd-list &lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="nv">$USER&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">fprintd-verify
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">systemctl status fprintd
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">lsusb
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;code>fprintd-verify&lt;/code> success means the reader and stored prints are fine; the failure is the desktop&amp;rsquo;s PAM configuration. Fedora generates PAM files from profiles:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">authselect current
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">authselect check
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">grep -R &lt;span class="s2">&amp;#34;pam_fprintd&amp;#34;&lt;/span> /etc/pam.d/ /etc/authselect/ 2&amp;gt;/dev/null
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>That grep lists every service accepting a fingerprint, and by omission those that do not.&lt;/p></description></item><item><title>Giving containers their own DNS</title><link>https://genezini.com/garden/docker-dns/</link><pubDate>Fri, 17 Apr 2026 00:00:00 +0000</pubDate><guid>https://genezini.com/garden/docker-dns/</guid><description>&lt;p>Editing &lt;code>/etc/resolv.conf&lt;/code> in a running container does not stick — Docker overwrites it on start and on networking changes. Configure the resolver at one of three levels:&lt;/p>
+&lt;p>&lt;strong>Per container:&lt;/strong>&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">docker run --dns&lt;span class="o">=&lt;/span>1.1.1.1 --dns&lt;span class="o">=&lt;/span>8.8.8.8 myimage
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">docker &lt;span class="nb">exec&lt;/span> -it &amp;lt;container&amp;gt; cat /etc/resolv.conf
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;strong>Per Compose service:&lt;/strong>&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="line">&lt;span class="cl">&lt;span class="nt">services&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">app&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">image&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">myimage&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">dns&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="m">1.1.1.1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="m">8.8.4.4&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;strong>Daemon-wide&lt;/strong>, in &lt;code>/etc/docker/daemon.json&lt;/code>, then &lt;code>sudo systemctl restart docker&lt;/code>:&lt;/p></description></item><item><title>GNU Stow for dotfiles</title><link>https://genezini.com/garden/gnu-stow-dotfiles/</link><pubDate>Fri, 17 Apr 2026 00:00:00 +0000</pubDate><guid>https://genezini.com/garden/gnu-stow-dotfiles/</guid><description>&lt;p>Stow symlinks a central config directory into place; nothing is copied, so editing &lt;code>~/.zshrc&lt;/code> edits the repository file.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">sudo apt install stow &lt;span class="c1"># Debian, Ubuntu&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo pacman -S stow &lt;span class="c1"># Arch&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">brew install stow &lt;span class="c1"># macOS&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>Each &lt;strong>package&lt;/strong> mirrors the target:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-text" data-lang="text">&lt;span class="line">&lt;span class="cl">~/dotfiles/
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">├── zsh/.zshrc
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">├── git/.gitconfig
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">└── nvim/.config/nvim/init.lua
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="nb">cd&lt;/span> ~/dotfiles
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">stow zsh
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">stow zsh git nvim
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">stow */
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>Exact structure: &lt;code>zsh/zshrc&lt;/code> links nothing, &lt;code>zsh/.zshrc&lt;/code> does. Preview with a dry run:&lt;/p></description></item><item><title>Honey and Black Honey: how much mucilage stays on the bean</title><link>https://genezini.com/garden/black-honey-process/</link><pubDate>Fri, 17 Apr 2026 00:00:00 +0000</pubDate><guid>https://genezini.com/garden/black-honey-process/</guid><description>&lt;p>Green coffee is processed three ways: &lt;strong>washed&lt;/strong> (fruit and mucilage stripped before drying), &lt;strong>natural&lt;/strong> (dried whole inside the fruit), or &lt;strong>honey&lt;/strong> — depulped, with some mucilage left on the bean through drying. Honey sits between washed and natural, and the colour name says how much sticky layer was kept.&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Type&lt;/th>
+&lt;th>Mucilage kept&lt;/th>
+&lt;th>Cup&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>White Honey&lt;/td>
+&lt;td>Little&lt;/td>
+&lt;td>Cleaner, lighter body&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Yellow Honey&lt;/td>
+&lt;td>Some&lt;/td>
+&lt;td>Sweet, balanced acidity, medium body&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Red Honey&lt;/td>
+&lt;td>More&lt;/td>
+&lt;td>Sweet, syrupy mouthfeel&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Black Honey&lt;/td>
+&lt;td>~100%&lt;/td>
+&lt;td>Heavy, creamy, molasses and toffee&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h2 id="why-black-honey-is-expensive">Why Black Honey is expensive&lt;/h2>
+&lt;p>The mucilage is sugar, so the bean dries inside a sticky food. The producer must:&lt;/p></description></item><item><title>rclone: sync versus copy, deletions, and local encryption</title><link>https://genezini.com/garden/rclone-sync-and-encryption/</link><pubDate>Fri, 17 Apr 2026 00:00:00 +0000</pubDate><guid>https://genezini.com/garden/rclone-sync-and-encryption/</guid><description>&lt;h2 id="the-one-difference-that-matters">The one difference that matters&lt;/h2>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Command&lt;/th>
+&lt;th>Copies new/changed&lt;/th>
+&lt;th>Deletes on target&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>&lt;code>rclone copy source/ remote:target/&lt;/code>&lt;/td>
+&lt;td>yes&lt;/td>
+&lt;td>no&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>rclone sync source/ remote:target/&lt;/code>&lt;/td>
+&lt;td>yes&lt;/td>
+&lt;td>&lt;strong>yes&lt;/strong>&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>&lt;code>sync&lt;/code> mirrors the destination exactly: delete a save locally, run &lt;code>sync&lt;/code>, and the remote copy goes too. Wrong default for backups — &lt;code>copy&lt;/code> leaves anything the source no longer has.&lt;/p>
+&lt;p>Always preview a destructive run:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">rclone sync /path/to/source remote:path/to/dest --dry-run -v
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;code>--delete-before&lt;/code> changes when deletions happen relative to the transfer, not whether they happen. &lt;code>copy&lt;/code> with &lt;code>--delete-excluded&lt;/code> is the middle option when exclusions should also propagate.&lt;/p></description></item><item><title>What to back up on Arch, and a Borg command that does it</title><link>https://genezini.com/garden/arch-system-backup/</link><pubDate>Fri, 17 Apr 2026 00:00:00 +0000</pubDate><guid>https://genezini.com/garden/arch-system-backup/</guid><description>&lt;p>&lt;code>/etc&lt;/code> is 10–50 MB of mostly text: take the whole directory, not cherry-picked configs:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">pacman -Qqe &amp;gt; ~/pkglist.txt &lt;span class="c1"># explicitly installed&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">pacman -Qqm &amp;gt; ~/aur-pkglist.txt &lt;span class="c1"># from the AUR&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>Those two lists make a rebuild an hour, not a weekend. Easy to forget beyond &lt;code>/etc&lt;/code>: &lt;code>~/.config&lt;/code>, the shell dotfiles, &lt;code>~/.ssh&lt;/code>, &lt;code>~/.gnupg&lt;/code>, &lt;code>~/.gitconfig&lt;/code>, the bootloader config — &lt;code>/etc/default/grub&lt;/code> for GRUB, &lt;code>/boot/loader/&lt;/code> for systemd-boot, outside &lt;code>/etc&lt;/code>.&lt;/p>
+&lt;p>One Borg run covering system, user config and package state:&lt;/p></description></item><item><title>zsync: updating a big file over plain HTTP</title><link>https://genezini.com/garden/zsync-delta-updates/</link><pubDate>Fri, 17 Apr 2026 00:00:00 +0000</pubDate><guid>https://genezini.com/garden/zsync-delta-updates/</guid><description>&lt;p>zsync delivers a new version of a file you already have. The server publishes a small &lt;code>.zsync&lt;/code> sidecar of block checksums for the target file:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-text" data-lang="text">&lt;span class="line">&lt;span class="cl">ubuntu.iso
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">ubuntu.iso.zsync
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>The client reads it, examines the local file, and fetches only changed blocks:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">zsync http://example.com/ubuntu.iso.zsync
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>For a 4 GB ISO with 300 MB of changes, that is roughly 300 MB transferred instead of 4 GB.&lt;/p>
+&lt;p>At scale the key property: the &lt;strong>server needs nothing special&lt;/strong> — an ordinary web server or CDN, and no copy of your old file:&lt;/p></description></item><item><title>inotify limits: instances, watches, and what a monorepo exhausts</title><link>https://genezini.com/garden/inotify-limits/</link><pubDate>Tue, 14 Apr 2026 00:00:00 +0000</pubDate><guid>https://genezini.com/garden/inotify-limits/</guid><description>&lt;p>Two sysctls, two limits, both &lt;strong>per user&lt;/strong>:&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Setting&lt;/th>
+&lt;th>Limits&lt;/th>
+&lt;th>Default&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>&lt;code>fs.inotify.max_user_instances&lt;/code>&lt;/td>
+&lt;td>inotify &lt;strong>instances&lt;/strong> one user may create&lt;/td>
+&lt;td>128&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>fs.inotify.max_user_watches&lt;/code>&lt;/td>
+&lt;td>&lt;strong>watches&lt;/strong> one user may attach&lt;/td>
+&lt;td>8,192&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>An &lt;strong>instance&lt;/strong> is one &lt;code>inotify_init()&lt;/code> / &lt;code>inotify_init1()&lt;/code> file descriptor — an fsnotify group, an event queue, the descriptor, and indexing structures for its watches. A &lt;strong>watch&lt;/strong> is one attachment to an inode, bookkeeping linking watch, instance and inode.&lt;/p>
+&lt;p>Many tools opening listeners exhaust instances; few listeners over many files exhaust watches.&lt;/p></description></item><item><title>Reverting a protected branch with git restore</title><link>https://genezini.com/garden/git-restore/</link><pubDate>Tue, 10 Jun 2025 00:00:00 +0000</pubDate><guid>https://genezini.com/garden/git-restore/</guid><description>&lt;p>&lt;code>develop&lt;/code> and &lt;code>main&lt;/code> are usually protected — no reset, no force-push — so undoing means new commits on top. &lt;code>git revert&lt;/code> needs a commit range and a &lt;code>-m&lt;/code> parent decision per merge commit: many chances to pick wrong.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">git revert 4dbcaf5419d5b5aa19776d7ed733a163cacd95fe..dbffeb4da345fd0c66b0b7a8193a6582b409cd4a
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>The fallback is a second clone: target branch checked out elsewhere, everything but &lt;code>.git&lt;/code> deleted, the good branch&amp;rsquo;s contents copied in, commit — works, miserable.&lt;/p>
+&lt;h2 id="the-one-liner">The one-liner&lt;/h2>
+&lt;p>&lt;code>git restore&lt;/code> copies files out of any revision into the working tree &lt;strong>without touching the index&lt;/strong>, unlike &lt;code>git checkout&lt;/code> or &lt;code>git reset&lt;/code>, which move it — so the desired tree pulls in on the protected branch:&lt;/p></description></item><item><title>Rebasing a messy branch in one conflict pass</title><link>https://genezini.com/garden/git-rebase/</link><pubDate>Tue, 18 Apr 2023 00:00:00 +0000</pubDate><guid>https://genezini.com/garden/git-rebase/</guid><description>&lt;p>On a branch drifted behind a busy &lt;code>main&lt;/code>, &lt;code>git rebase origin/main&lt;/code> conflicts on the first commit and again on each remaining one — 16 instead of one. Rebase an empty branch and replay the work as one uncommitted change.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">git checkout branch-to-rebase
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">git fetch --all
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">git merge-base branch-to-rebase origin/main &lt;span class="c1"># last commit before the branch&amp;#39;s own work&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>Reset to it: the branch&amp;rsquo;s differences return to the working tree, unstaged:&lt;/p></description></item><item><title>Git aliases: scopes, shell escapes, and the ones I use</title><link>https://genezini.com/garden/git-alias/</link><pubDate>Wed, 04 Jan 2023 00:00:00 +0000</pubDate><guid>https://genezini.com/garden/git-alias/</guid><description>&lt;p>An alias is an ordinary config entry: it exists only in the scope where created (&lt;code>git log --graph --oneline&lt;/code> → &lt;code>git graph&lt;/code>), shell commands included.&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Scope&lt;/th>
+&lt;th>Applies to&lt;/th>
+&lt;th>Config file&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>&lt;code>local&lt;/code>&lt;/td>
+&lt;td>the current repository&lt;/td>
+&lt;td>&lt;code>.git/config&lt;/code> (Windows: &lt;code>.git\config&lt;/code>)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>global&lt;/code>&lt;/td>
+&lt;td>the current user&lt;/td>
+&lt;td>&lt;code>~/.gitconfig&lt;/code> (Windows: &lt;code>%USERPROFILE%\.gitconfig&lt;/code>)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;code>system&lt;/code>&lt;/td>
+&lt;td>every user on the machine&lt;/td>
+&lt;td>&lt;code>/etc/gitconfig&lt;/code> (Windows: &lt;code>%PROGRAMDATA%\Git\config&lt;/code>)&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h2 id="creating-one">Creating one&lt;/h2>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">git config --global alias.c &lt;span class="s2">&amp;#34;checkout&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">git config --global alias.ec &lt;span class="s2">&amp;#34;commit --allow-empty -m &amp;#39;Empty commit&amp;#39;&amp;#34;&lt;/span> &lt;span class="c1"># single quotes when the command has double quotes&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>Or under &lt;code>[alias]&lt;/code> in the config file:&lt;/p></description></item><item><title>Git one-liners: prune, empty commits, show, grep, graph</title><link>https://genezini.com/garden/git-tips/</link><pubDate>Tue, 27 Dec 2022 00:00:00 +0000</pubDate><guid>https://genezini.com/garden/git-tips/</guid><description>&lt;p>Each deletes a step: four commands, a branch switch, or a commit you did not mean.&lt;/p>
+&lt;h2 id="prune-on-fetch">Prune on fetch&lt;/h2>
+&lt;p>&lt;code>--prune&lt;/code> drops local refs to remote branches deleted upstream:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">git fetch --prune
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>Stale refs accumulate with branch churn; &lt;code>git branch -a --contains &amp;lt;commit&amp;gt;&lt;/code> gets verbose and slow.&lt;/p>
+&lt;h2 id="merge-or-rebase-without-checking-out-the-target">Merge or rebase without checking out the target&lt;/h2>
+&lt;p>A fetch already placed the remote&amp;rsquo;s refs locally as &lt;code>origin/…&lt;/code>, and a branch is just a commit reference — no checkout, pull or checkout-back:&lt;/p></description></item></channel></rss>
